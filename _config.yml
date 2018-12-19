@@ -49,6 +49,9 @@ redcarpet:
     - tables
     - with_toc_data
 
+google_analytics: UA-131173493-1
+yandex_metrika: true
+
 disqus:
   shortname: ru-vahaah
 plugins:
