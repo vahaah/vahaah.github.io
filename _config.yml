@@ -15,11 +15,26 @@
 # in the templates via {{ site.myvariable }}.
 title: Yet another blog
 email: alex.vakhitov@gmail.com
+author: vahaah
 description: >- # this means to ignore newlines until "baseurl:"
-  Привет, меня зовут Алексей Вахитов, занимаюсь разработкой на Python и Golang.
-  Здесь я веду свой блог, в основном пишу о разработке на Python, но могу написать и что-то другое.
+  Очередной блог о разработке и всем что с ней связанно
 baseurl: "/" # the subpath of your site, e.g. /blog
 url: "https://ru.vahaah.guru" # the base hostname & protocol for your site, e.g. http://example.com
+
+twitter:
+  username: vahaah
+  card: summary
+
+social:
+  name: Alex Vakhitov
+  links:
+    - https://twitter.com/vahaah
+    - https://github.com/vahaah
+    - https://instagram.com/vahaah
+
+webmaster_verifications:
+  google: 11p66_UM03GRxdmvTd90BBQn7G2eVFDmtyaFtQ5O540
+  yandex: b515e98375753ead
 
 # theme
 

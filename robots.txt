@@ -1,0 +1,5 @@
+Sitemap: https://ru.vahaah.guru/sitemap.xml
+
+User-agent: *
+Disallow: /p/
+Disallow: /404.html
