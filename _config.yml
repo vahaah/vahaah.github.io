@@ -51,7 +51,6 @@ redcarpet:
 
 plugins:
   - jekyll-feed
-  - jekyll-youtube
   - jekyll-typogrify
   - jekyll-paginate
   - jekyll-bits
