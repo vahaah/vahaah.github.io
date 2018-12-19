@@ -49,6 +49,8 @@ redcarpet:
     - tables
     - with_toc_data
 
+disqus:
+  shortname: ru-vahaah
 plugins:
   - jekyll-feed
   - jekyll-typogrify
