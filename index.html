@@ -7,7 +7,30 @@ layout: default
       {% for post in paginator.posts %}
       <li>
         {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
-        <span class="post-meta">{{ post.date | date: date_format }}</span>
+        <div class="post-meta">
+          <ul class="subline">
+          <li>{{ post.date | date: date_format }}</li>
+          <li>{{ post.content | count_words }} слов</li>
+          <li>{% capture time %}{{ post.content | reading_time }}{% endcapture %}
+              {% if time == '1' %}
+                минута
+              {% else %}
+                {% case time %}
+                  {% when '2' %}
+                    две минуты
+                  {% when '3' %}
+                    три минуты
+                  {% when '4' %}
+                    четыре минуты
+                  {% when '5' %}
+                    пять минут
+                  {% else %}
+                    {{ time }} минут
+                {% endcase %}
+              {% endif %}
+              для прочтения</li>
+              </ul>
+        </div>
         <h3>
           <a class="post-link" href="{{ post.url | relative_url }}">
             {{ post.title | escape }}

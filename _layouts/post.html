@@ -5,14 +5,41 @@ layout: default
 
   <header class="post-header">
     <h1 class="post-title p-name" itemprop="name headline">{{ page.title | escape }}</h1>
-    <p class="post-meta">
-      <time class="dt-published" datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">
-        {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
-        {{ page.date | date: date_format }}
-      </time>
+    <div class="post-meta">
+      <ul class="subline">
+        <li>
+          <time class="dt-published" datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">
+            {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+            {{ page.date | date: date_format }}
+          </time>
+        </li>
       {%- if page.author -%}
-        • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span class="p-author h-card" itemprop="name">{{ page.author }}</span></span>
-      {%- endif -%}</p>
+        <li><span itemprop="author" itemscope itemtype="http://schema.org/Person"><span class="p-author h-card" itemprop="name">{{ page.author }}</span></span></li>
+      {%- endif -%}
+      <li>{{ page.content | count_words }} слов</li>
+      <li>
+      {% capture time %}{{ page.content | reading_time }}{% endcapture %}
+          {% if time == '1' %}
+            минута
+          {% else %}
+            {% case time %}
+              {% when '2' %}
+                две минуты
+              {% when '3' %}
+                три минуты
+              {% when '4' %}
+                четыре минуты
+              {% when '5' %}
+                пять минут
+              {% else %}
+                {{ time }} минут
+            {% endcase %}
+          {% endif %}
+          для прочтения
+       </li>
+      </ul>
+    </div>
+    <p class="unprintable">{{ page | yb_page_tags }}</p>
   </header>
 
   <div class="post-content e-content" itemprop="articleBody">

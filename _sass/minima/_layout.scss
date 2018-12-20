@@ -200,6 +200,18 @@
 .post-meta {
   font-size: $small-font-size;
   color: $grey-color;
+  .subline {
+    list-style: none;
+    margin-top: 0;
+    padding-left: 0;
+    margin-left: 0;
+    margin-bottom: 0;
+    li {
+      display: inline;
+      margin-right: .5 * $em;
+      white-space: nowrap;
+    }
+}
 }
 
 .post-link {
