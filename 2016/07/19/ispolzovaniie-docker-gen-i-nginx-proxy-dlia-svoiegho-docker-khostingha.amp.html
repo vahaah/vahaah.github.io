@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html amp lang="en">
+  <head>
+
+    <meta charset="utf-8">
+    <title>Использование docker-gen и nginx-proxy для своего docker хостинга</title>
+    <link rel="canonical" href="https://ru.vahaah.guru//2016/07/19/ispolzovaniie-docker-gen-i-nginx-proxy-dlia-svoiegho-docker-khostingha.html">
+    <link rel="icon" type="image/png" href="/favicon.ico">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+    <script type="application/ld+json">
+      {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "mainEntityOfPage":{
+          "@type": "WebPage",
+          "@id": "https://ru.vahaah.guru//2016/07/19/ispolzovaniie-docker-gen-i-nginx-proxy-dlia-svoiegho-docker-khostingha.html"
+        },
+        "headline": "Использование docker-gen и nginx-proxy для своего docker хостинга",
+        "image": {
+          "@type": "ImageObject",
+          "url": "https://www.yegor256.com/images/face-1200x1200.jpg",
+          "height": 1400,
+          "width": 1400
+        },
+        "datePublished": "2016-07-19 09:22:38",
+        "dateModified": "2016-07-19 09:22:38",
+        "author": {
+          "@type": "Person",
+          "name": "Yegor Bugayenko"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "ru.vahaah.guru",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://ru.vahaah.guru/images/face-512x512.jpg",
+            "width": 512,
+            "height": 512
+          }
+        },
+        "description": "",
+        "keywords": [""]
+      }
+    </script>
+    <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style>
+<noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,500">
+    <style amp-custom="amp-custom">
+
+      body { font-family: serif; padding: .5em; font-size: 1.2em; }
+      article { width: 600px; max-width: 100%; margin-left: auto; margin-right: auto; }
+      pre, code { font-family: 'Source Code Pro', 'Courier New', monospace; font-size: .8em; }
+      code { padding: 0 .3em; background-color: lightgray; }
+      a, a:hover, a:visited { color: inherit; }
+      .intro { color: red; font-size: .75em; }
+      .photo { border-radius: 50%; }
+      pre { overflow-x:scroll; }
+    </style>
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
+  </head>
+  <body>
+    <article>
+      <p class="intro">
+        This is a mobile version, full one is
+        <a href="https://ru.vahaah.guru//2016/07/19/ispolzovaniie-docker-gen-i-nginx-proxy-dlia-svoiegho-docker-khostingha.html">here</a>.
+      </p>
+      <p>
+        <amp-img src="/images/face-256x256.jpg" width="80" height="80" alt="" class="photo"></amp-img>
+      </p>
+      <p><br>19 July 2016</p>
+      <h1>Использование docker-gen и nginx-proxy для своего docker хостинга</h1>
+      <p>Для докера есть потрясающий пакет под названием <a href="https://github.com/jwilder/docker-gen">docker-gen</a> он позволяет получать мета информацию о запущенных контейнерах, сигналы старта/завершения контейнера и еще много приятных мелочей. В этой статье я хочу описать создание простого paas на основе docker-gen. Наш сервис сможет создавать конфиг nginx для всех запущенных проектов в конечном результате у нас будет свой маленький heroku и мы загружать несколько разных проектов на один сервер с помощью docker-machine.</p>
+
+
+
+<p>Для начала создадим docker-compose.yml для нашего nginx:</p>
+
+<pre>version: '2'
+services:
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro</pre>
+
+<p>Я использую готовый пакет <a href="https://github.com/jwilder/nginx-proxy">nginx-proxy</a> для генерации конфигурационного файла nginx в общем можно обойтись и без него, но для первой статьи так будет проще.</p>
+
+<p>Далее нам нужно создать network через docker, чтобы наш docker-gen мог просматривать все контейнеры и у nginx был к ним доступ:</p>
+
+<pre>docker network create nginx-proxy</pre>
+
+<p>Теперь объявим эту сеть в нашем docker-compose файле:</p>
+
+<pre>version: '2'
+services:
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+
+networks:
+  default:
+    external:
+      name: nginx-proxy</pre>
+
+<p>Теперь нужно создать docker-machine и выполнить <code class="highlighter-rouge">docker-compose up</code>.</p>
+
+<p>Основа нашего PaaS дана давайте создадим docker-compose.yml для нашего первого проекта:</p>
+
+<pre>version: '2'
+services:
+  host:
+    image: jwilder/whoami
+    environment:
+      - VIRTUAL_HOST=host1.local
+
+networks:
+  default:
+    external:
+      name: nginx-proxy</pre>
+
+<p>Здесь я использовал образ <a href="https://github.com/jwilder/whoami">whoami</a> который возвращает id контейнера и добавил переменную окружения VIRTUAL_HOST которая содержит домен для данного проекта. Ну и подключился к ранее созданной сети.</p>
+
+<p>Теперь нужно подключиться к нашей docker-machine и выполнить <code class="highlighter-rouge">docker-compose up</code>. И если мы перейдем на host1.local то увидим сообщение <strong>I’m d54d3d39423b</strong> где d54d3d39423b id вашего контейнера.</p>
+
+<p>Теперь мы можем создать еще один проект с VIRTUAL_HOST=host2.local:</p>
+
+<pre>version: '2'
+services:
+  host:
+    image: jwilder/whoami
+    environment:
+      - VIRTUAL_HOST=host2.local
+
+networks:
+  default:
+    external:
+      name: nginx-proxy</pre>
+
+<p>И также его запустить и мы увидим 2 одновременно запущенный проекта на одном хосте. Можно также выполнить команду для масштабирования нашего проекта <code class="highlighter-rouge">docker-compose scale host=2</code> и если мы начнем обновлять страницу host2.local то увидим что id будет изменяться.</p>
+
+<p>Теперь у нас есть свой мини хостинг на который мы можем загружать простые статический сайты через docker-machine.</p>
+
+<p>На этом я закончу. В следующей части я опишу более приближенный к реальности пример.</p>
+
+    </article>
+  </body>
+</html>

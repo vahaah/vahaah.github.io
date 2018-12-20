@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html amp lang="en">
+  <head>
+
+    <meta charset="utf-8">
+    <title>Лучшие практики Django</title>
+    <link rel="canonical" href="https://ru.vahaah.guru//2014/04/28/luchshiie-praktiki-django.html">
+    <link rel="icon" type="image/png" href="/favicon.ico">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+    <script type="application/ld+json">
+      {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "mainEntityOfPage":{
+          "@type": "WebPage",
+          "@id": "https://ru.vahaah.guru//2014/04/28/luchshiie-praktiki-django.html"
+        },
+        "headline": "Лучшие практики Django",
+        "image": {
+          "@type": "ImageObject",
+          "url": "https://www.yegor256.com/images/face-1200x1200.jpg",
+          "height": 1400,
+          "width": 1400
+        },
+        "datePublished": "2014-04-28 12:29:00",
+        "dateModified": "2014-04-28 12:29:00",
+        "author": {
+          "@type": "Person",
+          "name": "Yegor Bugayenko"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "ru.vahaah.guru",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://ru.vahaah.guru/images/face-512x512.jpg",
+            "width": 512,
+            "height": 512
+          }
+        },
+        "description": "",
+        "keywords": [""]
+      }
+    </script>
+    <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style>
+<noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,500">
+    <style amp-custom="amp-custom">
+
+      body { font-family: serif; padding: .5em; font-size: 1.2em; }
+      article { width: 600px; max-width: 100%; margin-left: auto; margin-right: auto; }
+      pre, code { font-family: 'Source Code Pro', 'Courier New', monospace; font-size: .8em; }
+      code { padding: 0 .3em; background-color: lightgray; }
+      a, a:hover, a:visited { color: inherit; }
+      .intro { color: red; font-size: .75em; }
+      .photo { border-radius: 50%; }
+      pre { overflow-x:scroll; }
+    </style>
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
+  </head>
+  <body>
+    <article>
+      <p class="intro">
+        This is a mobile version, full one is
+        <a href="https://ru.vahaah.guru//2014/04/28/luchshiie-praktiki-django.html">here</a>.
+      </p>
+      <p>
+        <amp-img src="/images/face-256x256.jpg" width="80" height="80" alt="" class="photo"></amp-img>
+      </p>
+      <p><br>28 April 2014</p>
+      <h1>Лучшие практики Django</h1>
+      <p>Недавно наткнулся на статью о лучших практиках разработки на django (<a href="http://lincolnloop.com/django-best-practices/projects.html">ссылка</a>), меня сильно порадовало что большинство из этого я интуитивно использую уже довольно давно, но вот некоторые части мне кажется нужно делать подругому нежели описанны в статье. Сейчас хочу привести вашему вниманию симбеоз статьи указанной выше и моих мыслей. Также советую совместить данную статью с моим постом о <a href="//2013/09/01/django_structure.html">структуре django проекта</a>
+</p>
+
+<h3 id="Струкура-настроек-проекта">Струкура настроек проекта</h3>
+
+<p>Я обычно храню все основные настройки в файле <strong>settings.py</strong> и в него импортирую файл <strong>local_settings.py</strong>, также файл settings.py хранится в git, а local_settings.py делается для каждого окружения свой, но в git хранится local_settings.py.example который содержит структуру файла и то что можно в нем менять или добавить.</p>
+
+<p>Импорт в settings.py:</p>
+
+<pre>try:
+    from settings_local import *
+except ImportError:
+    pass</pre>
+
+<p>Примерное содержимое файла local_settings.py.example:</p>
+
+<pre>import os
+
+DEBUG = True
+TEMPLATE_DEBUG = DEBUG
+
+ADMINS = (
+    ('You', 'your@email'),
+)
+MANAGERS = ADMINS
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(os.path.realpath(__file__), 'dev.db'),
+    }
+}
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
+}</pre>
+
+<p>Структура выглядит примерно так:</p>
+
+<pre>project #директория проекта
+- prjct #директория основного приложения
+- - settings.py
+- - local_settings.py.example
+- - local_settings.py
+- - …
+- manage.py</pre>
+
+<p>При переносе приложения на другой сервер, либо при открытии проекта другим разарботкичом требуется лишь переименовать local_settings.py.example в local_settings.py и внести нужные настройки.</p>
+
+<h3 id="Использование-путей-к-файлам">Использование путей к файлам.</h3>
+
+<p>В настройках django нужно указывать пути до директорий в которых хранятся статические файлы, наблоны, файлы локализации и тд. Для этого не нужно писать полный путь, а лучше поручить все это python. Я для этого использую данный прием:</p>
+
+<pre>import os
+
+PROJECT_DIR = os.path.dirname(os.path.realpath(__file__))
+
+def p(*args):
+    return os.path.join(PROJECT_DIR, '..', *args)</pre>
+
+<p>В теперь путь функция p будет указывать на корень проекта, и использовать ее нужно вот так:</p>
+
+<pre>STATIC_ROOT = p('static’)</pre>
+
+<p>Для статических файлов будет определена директория static в корне проекта.</p>
+
+<h3 id="Статические-файлы-в-шаблоне">Статические файлы в шаблоне.</h3>
+
+<p>Для определения путей к статическим файлам я использую приложение staticfiles (django.contrib.staticfiles), его нужно добавить к списку INSTALLED_APPS:</p>
+
+<pre>INSTALLED_APPS = [
+….
+ ‘django.contrib.staticfiles’,
+….
+]</pre>
+
+<p>И теперь во всех шаблонах мы сможем использовать удобную конструкцию для загрузки статических файлов:</p>
+
+<pre>{% load static %}
+&lt;img src="{% static «images/test.jpg" %}" /&gt;</pre>
+
+<h3 id="Работа-с-шаблонами">Работа с шаблонами.</h3>
+
+<p>Самый лучший и однозначный способ именования шаблонов это использование такой конструкции:</p>
+
+<pre>{приложение} / {модель} _ {функция}. HTML</pre>
+
+<p>Функции:</p>
+<ul>
+  <li>
+<strong>list</strong> - для вывода списков</li>
+  <li>
+<strong>detail</strong> - для детальное отображения</li>
+  <li>
+<strong>form</strong> - для вывода формы</li>
+</ul>
+
+<p>А все части шаблона нужно складывать в директорию includes</p>
+
+<p>Я указал лишь основы, в будущем скорей всего продолжу тему хороших практик при создании django  приложения</p>
+
+    </article>
+  </body>
+</html>

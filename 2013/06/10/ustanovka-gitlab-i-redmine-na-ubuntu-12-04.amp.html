@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html amp lang="en">
+  <head>
+
+    <meta charset="utf-8">
+    <title>Установка GitLab и Redmine на Ubuntu 12.04</title>
+    <link rel="canonical" href="https://ru.vahaah.guru//2013/06/10/ustanovka-gitlab-i-redmine-na-ubuntu-12-04.html">
+    <link rel="icon" type="image/png" href="/favicon.ico">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+    <script type="application/ld+json">
+      {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "mainEntityOfPage":{
+          "@type": "WebPage",
+          "@id": "https://ru.vahaah.guru//2013/06/10/ustanovka-gitlab-i-redmine-na-ubuntu-12-04.html"
+        },
+        "headline": "Установка GitLab и Redmine на Ubuntu 12.04",
+        "image": {
+          "@type": "ImageObject",
+          "url": "https://www.yegor256.com/images/face-1200x1200.jpg",
+          "height": 1400,
+          "width": 1400
+        },
+        "datePublished": "2013-06-10 12:16:00",
+        "dateModified": "2013-06-10 12:16:00",
+        "author": {
+          "@type": "Person",
+          "name": "Yegor Bugayenko"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "ru.vahaah.guru",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://ru.vahaah.guru/images/face-512x512.jpg",
+            "width": 512,
+            "height": 512
+          }
+        },
+        "description": "",
+        "keywords": [""]
+      }
+    </script>
+    <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style>
+<noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,500">
+    <style amp-custom="amp-custom">
+
+      body { font-family: serif; padding: .5em; font-size: 1.2em; }
+      article { width: 600px; max-width: 100%; margin-left: auto; margin-right: auto; }
+      pre, code { font-family: 'Source Code Pro', 'Courier New', monospace; font-size: .8em; }
+      code { padding: 0 .3em; background-color: lightgray; }
+      a, a:hover, a:visited { color: inherit; }
+      .intro { color: red; font-size: .75em; }
+      .photo { border-radius: 50%; }
+      pre { overflow-x:scroll; }
+    </style>
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
+  </head>
+  <body>
+    <article>
+      <p class="intro">
+        This is a mobile version, full one is
+        <a href="https://ru.vahaah.guru//2013/06/10/ustanovka-gitlab-i-redmine-na-ubuntu-12-04.html">here</a>.
+      </p>
+      <p>
+        <amp-img src="/images/face-256x256.jpg" width="80" height="80" alt="" class="photo"></amp-img>
+      </p>
+      <p><br>10 June 2013</p>
+      <h1>Установка GitLab и Redmine на Ubuntu 12.04</h1>
+      <p>Для начала скажу пару слов о том что есть что. GitLab, на мой взгляд, это лучшая веб обертка над git, и если быть совсем кратким это свой личный GitHub. Redmine это отличный менеджер проектов. Как мне кажется это две очень необходимые вещи для любого разработчика
+
+Для начала необходимо установить все нужные пакеты:</p>
+
+<pre>apt-get update
+apt-get upgrade
+apt-get install -y build-essential zlib1g-dev libyaml-dev libssl-dev \
+libgdbm-dev libreadline-dev libncurses5-dev libffi-dev curl git-core \
+openssh-server redis-server checkinstall libxml2-dev libxslt-dev \
+libcurl4-openssl-dev libicu-dev postfix python nginx \
+imagemagick  libmagickcore-dev libmagickwand-dev \
+mysql-server mysql-client libmysqlclient-dev</pre>
+
+<p>Теперь нам нужно удалить старую версию ruby и установить то что нужно нам для работы</p>
+
+<pre>apt-get remove ruby1.8</pre>
+
+<p>и ставим новый ruby</p>
+
+<pre>mkdir /tmp/ruby &amp;&amp; cd /tmp/ruby
+curl --progress http://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.3-p429.tar.gz | tar xz
+cd ruby-1.9.3-p429
+./configure
+make
+make install
+gem install bundler --no-ri --no-rdoc</pre>
+
+<h3 id="Установка-gitlab">Установка GitLab</h3>
+
+<p>для начала нужно создать нового пользователя для GitLab</p>
+
+<pre>adduser --disabled-login --gecos 'GitLab' git</pre>
+
+<p>меняем пользователя и переходим в домашнюю директорию:</p>
+
+<pre>sudo su git
+cd /home/git</pre>
+
+<p>Устанавливаем gitlab-shell</p>
+
+<pre>git clone https://github.com/gitlabhq/gitlab-shell.git
+cd gitlab-shell/
+git checkout -b v1.5.0 v1.5.0
+cp config.yml{.example,}
+vim config.yml # проверяем конфигурацию
+./bin/install
+cd ../</pre>
+
+<p>Устанавливаем GitLab</p>
+
+<pre>cd /home/git
+git clone https://github.com/gitlabhq/gitlabhq.git gitlab
+cd /home/git/gitlab
+git checkout -b v5.2.1 v5.2.1
+cp config/gitlab.yml{.example,}
+vim config/gitlab.yml # проверяем конфигурацию
+chown -R git log/
+chown -R git tmp/
+mkdir tmp/pids/
+mkdir tmp/sockets/
+mkdir public/uploads
+chmod -R u+rwX  log/
+chmod -R u+rwX  tmp/
+chmod -R u+rwX  public/uploads
+cp config/puma.rb{.example,}
+git config --global user.name "GitLab"
+git config --global user.email "gitlab@example.com"</pre>
+
+<p>Создаем и настраиваем базу данных</p>
+
+<pre>cp config/database.yml{.mysql,}
+mysql -u root -p
+
+mysql&gt; CREATE USER 'gitlab'@'localhost' IDENTIFIED BY '$password';
+mysql&gt; CREATE DATABASE IF NOT EXISTS &amp;#96;gitlabhq_production&amp;#96; DEFAULT CHARACTER SET &amp;#96;utf8&amp;#96; COLLATE &amp;#96;utf8_unicode_ci&amp;#96;;
+mysql&gt; GRANT SELECT, LOCK TABLES, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER ON &amp;#96;gitlabhq_production&amp;#96;.* TO 'gitlab'@'localhost';
+mysql&gt; exit;
+
+vim config/database.yml</pre>
+
+<p>И теперь проводим саму установку</p>
+
+<pre>gem install charlock_holmes --version '0.6.9.4' --no-ri --no-rdoc
+bundle install --deployment --without development test postgres
+bundle exec rake gitlab:setup RAILS_ENV=production
+bundle exec rake gitlab:env:info RAILS_ENV=production
+bundle exec rake sidekiq:start RAILS_ENV=production</pre>
+
+<p>Добавляем запуск службы в init.d</p>
+
+<pre>su
+cp lib/support/init.d/gitlab /etc/init.d/gitlab
+chmod +x /etc/init.d/gitlab
+update-rc.d gitlab defaults 21</pre>
+
+<p>Поздравляю, мы только что установили GitLab</p>
+
+<h3 id="redmine">Redmine</h3>
+
+<p>Для начала необходимо создать директорию и скачать само приложение</p>
+
+<pre>mkdir -m 755 /home/project
+cd /home/project
+git clone https://github.com/redmine/redmine.git
+cd redmine</pre>
+
+<p>Конфигурируем базу данных:</p>
+
+<pre>cp config/database.yml{.example,}
+mysql -u root -p
+
+mysql&gt; CREATE USER 'redmine'@'localhost' IDENTIFIED BY '$password';
+mysql&gt; CREATE DATABASE IF NOT EXISTS &amp;#96;redmine&amp;#96; DEFAULT CHARACTER SET &amp;#96;utf8&amp;#96; COLLATE &amp;#96;utf8_unicode_ci&amp;#96;;
+mysql&gt; GRANT SELECT, LOCK TABLES, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER ON &amp;#96;redmine&amp;#96;.* TO 'redmine'@'localhost';
+mysql&gt; exit;
+
+vim config/database.yml # вносим информацию о бд</pre>
+
+<p>Для запуска redmine нам необходимо скопировать файл puma.rb из GitLab</p>
+
+<pre>cp /home/git/gitlab/config/puma.rb config/puma.rb
+vim config/puma.rb # изменить все gitlab на redmine, и откоректировать пути
+vim Gemfile # нужно добавить строку " gem "puma", '~&gt; 2.0.1' "
+cp -pR config/configuration.yml{.example,}
+vim config/configuration.yml # основная конфигурация
+
+bundle install --without development test postgresql sqlite
+rake generate_secret_token</pre>
+
+<p>И последние шаги:</p>
+
+<pre>RAILS_ENV=production rake db:migrate
+RAILS_ENV=production rake redmine:load_default_data
+mkdir tmp public/plugin_assets
+chown -R www-data:www-data /home/project
+chmod -R 755 files log tmp public/plugin_assets</pre>
+
+<p>Теперь нам нужно создать файл /etc/init.d/redmine и добавить в него следующее содержимое <a href="https://gist.github.com/vahaah/6146231">Gist</a></p>
+
+<pre>vim /etc/init.d/redmine
+chmod +x /etc/init.d/redmine
+update-rc.d redmine defaults 21</pre>
+
+<h3 id="nginx">NGINX</h3>
+
+<p>Конфигурация nginx для gitlab</p>
+
+<pre>vim /etc/nginx/sites-available/gitlab
+
+
+upstream gitlab {
+  server unix:/home/git/gitlab/tmp/sockets/gitlab.socket;
+}
+
+server {
+  listen 80;         
+  server_name git.smidth.ru;
+  server_tokens off;
+  root /home/git/gitlab/public;
+
+  access_log  /var/log/nginx/gitlab_access.log;
+  error_log   /var/log/nginx/gitlab_error.log;
+
+  location / {
+    try_files $uri $uri/index.html $uri.html @gitlab;
+  }
+
+  location @gitlab {
+    proxy_read_timeout 300;
+    proxy_connect_timeout 300;
+    proxy_redirect     off;
+
+    proxy_set_header   X-Forwarded-Proto $scheme;
+    proxy_set_header   Host              $http_host;
+    proxy_set_header   X-Real-IP         $remote_addr;
+
+    proxy_pass http://gitlab;
+  }
+}</pre>
+
+<p>и конфигурация для redmine</p>
+
+<pre>vim /etc/nginx/sites-available/redmine
+
+
+upstream redmine {
+  server unix:/home/project/redmine/tmp/sockets/redmine.socket;
+}
+
+server {
+  listen 80;         
+  server_name redmine.smidth.ru;
+  server_tokens off;
+  root /home/project/redmine/public;
+
+  access_log  /var/log/nginx/redmine_access.log;
+  error_log   /var/log/nginx/redmine_error.log;
+
+  location / {
+    try_files $uri $uri/index.html $uri.html @redmine;
+  }
+
+  location @redmine {
+    proxy_read_timeout 300;
+    proxy_connect_timeout 300;
+    proxy_redirect     off;
+
+    proxy_set_header   X-Forwarded-Proto $scheme;
+    proxy_set_header   Host              $http_host;
+    proxy_set_header   X-Real-IP         $remote_addr;
+
+    proxy_pass http://redmine;
+  }
+}</pre>
+
+<p>После этого все что нам остается это перезапустить все службы</p>
+
+<pre>service gitlab restart
+service redmine restart
+service nginx restart</pre>
+
+
+    </article>
+  </body>
+</html>

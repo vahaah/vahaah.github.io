@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ru"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Letsencrypt, NGINX и Docker Compose | Yet another blog</title>
+<meta name="generator" content="Jekyll v3.6.3" />
+<meta property="og:title" content="Letsencrypt, NGINX и Docker Compose" />
+<meta name="author" content="vahaah" />
+<meta property="og:locale" content="ru" />
+<meta name="description" content="Привожу самый простой вариант того как запустить letsencrypt с помощью docker compose." />
+<meta property="og:description" content="Привожу самый простой вариант того как запустить letsencrypt с помощью docker compose." />
+<link rel="canonical" href="https://ru.vahaah.guru/2016/06/03/letsencrypt-nginx-i-docker-compose.html" />
+<meta property="og:url" content="https://ru.vahaah.guru/2016/06/03/letsencrypt-nginx-i-docker-compose.html" />
+<meta property="og:site_name" content="Yet another blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2016-06-03T16:33:50+03:00" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@vahaah" />
+<meta name="twitter:creator" content="@vahaah" />
+<meta name="google-site-verification" content="11p66_UM03GRxdmvTd90BBQn7G2eVFDmtyaFtQ5O540" />
+<meta name="yandex-verification" content="b515e98375753ead" />
+<script type="application/ld+json">
+{"description":"Привожу самый простой вариант того как запустить letsencrypt с помощью docker compose.","author":{"@type":"Person","name":"vahaah"},"@type":"BlogPosting","url":"https://ru.vahaah.guru/2016/06/03/letsencrypt-nginx-i-docker-compose.html","headline":"Letsencrypt, NGINX и Docker Compose","dateModified":"2016-06-03T16:33:50+03:00","datePublished":"2016-06-03T16:33:50+03:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://ru.vahaah.guru/2016/06/03/letsencrypt-nginx-i-docker-compose.html"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://ru.vahaah.guru/rss.xml" title="Yet another blog" /><script>
+if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1")) {
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-131173493-1', 'auto');
+  ga('send', 'pageview');
+}
+</script>
+<link rel="amphtml" href="https://ru.vahaah.guru/2016/06/03/letsencrypt-nginx-i-docker-compose.amp.html" />
+  
+  <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Yet another blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger">
+          <a class="page-link" href="/about/">Обо мне</a>
+        </div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Letsencrypt, NGINX и Docker Compose</h1>
+    <div class="post-meta">
+      <ul class="subline">
+        <li>
+          <time class="dt-published" datetime="2016-06-03T16:33:50+03:00" itemprop="datePublished">03.06.2016
+          </time>
+        </li><li>104 слов</li>
+      <li>
+      
+          
+            минута
+          
+          для прочтения
+       </li>
+      </ul>
+    </div>
+    <p class="unprintable"><a href='/tag/docker.html' class='tag notranslate'>docker</a> <a href='/tag/nginx.html' class='tag notranslate'>nginx</a></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>Привожу самый простой вариант того как запустить letsencrypt с помощью docker compose.</p>
+
+<!--more-->
+
+<p>docker-compose.yml</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">version</span><span class="pi">:</span> <span class="s1">'</span><span class="s">2'</span>
+
+<span class="na">services</span><span class="pi">:</span>
+  <span class="na">nginx</span><span class="pi">:</span>
+    <span class="na">restart</span><span class="pi">:</span> <span class="s">always</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">nginx</span>
+    <span class="na">hostname</span><span class="pi">:</span> <span class="s">example.com</span>
+    <span class="na">build</span><span class="pi">:</span> <span class="s">./compose/nginx</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">80:80</span>
+      <span class="pi">-</span> <span class="s">443:443</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">/etc/localtime:/etc/localtime:ro</span>
+      <span class="pi">-</span> <span class="s">./letsencrypt/conf:/etc/letsencrypt</span>
+      <span class="pi">-</span> <span class="s">./letsencrypt/html:/tmp/letsencrypt</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">LE_RENEW_HOOK=docker kill -s HUP @CONTAINER_NAME@</span>
+
+  <span class="na">letsencrypt</span><span class="pi">:</span>
+    <span class="na">restart</span><span class="pi">:</span> <span class="s">always</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">kvaps/letsencrypt-webroot</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">/etc/localtime:/etc/localtime:ro</span>
+      <span class="pi">-</span> <span class="s">/var/run/docker.sock:/var/run/docker.sock</span>
+      <span class="pi">-</span> <span class="s">./letsencrypt/conf:/etc/letsencrypt</span>
+      <span class="pi">-</span> <span class="s">./letsencrypt/html:/tmp/letsencrypt</span>
+    <span class="na">links</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">nginx</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">DOMAINS=example.com www.example.com</span>
+      <span class="pi">-</span> <span class="s">EMAIL=example@gmail.com</span>
+      <span class="pi">-</span> <span class="s">WEBROOT_PATH=/tmp/letsencrypt</span>
+      <span class="pi">-</span> <span class="s">EXP_LIMIT=30</span>
+      <span class="pi">-</span> <span class="s">CHECK_FREQ=30</span></code></pre></figure>
+
+<p>Как видно из docker-compose.yml мы используем <a href="https://hub.docker.com/r/kvaps/letsencrypt-webroot/">kvaps/letsencrypt-webroot</a> для контейнера letsencrypt и расшариваем файловую систему между ним и контейнером nginx. Dockerfile для контейнера nginx находится в директории <code class="highlighter-rouge">/compose/nginx</code></p>
+
+<p>Dockerfile для nginx</p>
+
+<figure class="highlight"><pre><code class="language-dockerfile" data-lang="dockerfile"><span class="k">FROM</span><span class="s"> nginx:latest</span>
+<span class="k">ADD</span><span class="s"> nginx.conf /etc/nginx/nginx.conf</span>
+<span class="k">ADD</span><span class="s"> dhparams.pem /etc/nginx/dhparams.pem</span></code></pre></figure>
+
+<p>Мы используем стандартную сборку nginx и просто копируем nginx.conf из директории c Dockerfile в контейнер.</p>
+
+<p>Содержимое nginx.conf:</p>
+
+<figure class="highlight"><pre><code class="language-nginx" data-lang="nginx"><span class="k">user</span>  <span class="s">nginx</span><span class="p">;</span>
+<span class="k">worker_processes</span>  <span class="mi">1</span><span class="p">;</span>
+<span class="k">error_log</span>  <span class="n">/var/log/nginx/error.log</span> <span class="s">warn</span><span class="p">;</span>
+<span class="k">pid</span>        <span class="n">/var/run/nginx.pid</span><span class="p">;</span>
+<span class="k">events</span> <span class="p">{</span>
+    <span class="kn">worker_connections</span>  <span class="mi">1024</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">http</span> <span class="p">{</span>
+    <span class="kn">include</span>       <span class="n">/etc/nginx/mime.types</span><span class="p">;</span>
+    <span class="kn">default_type</span>  <span class="nc">application/octet-stream</span><span class="p">;</span>
+
+    <span class="kn">log_format</span>  <span class="s">main</span>  <span class="s">'</span><span class="nv">$remote_addr</span> <span class="s">-</span> <span class="nv">$remote_user</span> <span class="s">[</span><span class="nv">$time_local</span><span class="s">]</span> <span class="s">"</span><span class="nv">$request</span><span class="s">"</span> <span class="s">'</span>
+                      <span class="s">'</span><span class="nv">$status</span> <span class="nv">$body_bytes_sent</span> <span class="s">"</span><span class="nv">$http_referer</span><span class="s">"</span> <span class="s">'</span>
+                      <span class="s">'"</span><span class="nv">$http_user_agent</span><span class="s">"</span> <span class="s">"</span><span class="nv">$http_x_forwarded_for</span><span class="s">"'</span><span class="p">;</span>
+    <span class="kn">access_log</span>  <span class="n">/var/log/nginx/access.log</span>  <span class="s">main</span><span class="p">;</span>
+    <span class="kn">sendfile</span>        <span class="no">on</span><span class="p">;</span>
+    <span class="kn">keepalive_timeout</span>  <span class="mi">65</span><span class="p">;</span>
+    <span class="kn">upstream</span> <span class="s">app</span> <span class="p">{</span>
+        <span class="kn">server</span> <span class="nf">django</span><span class="p">:</span><span class="mi">5000</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kn">server</span> <span class="p">{</span>
+        <span class="kn">listen</span> <span class="mi">80</span><span class="p">;</span>
+        <span class="kn">charset</span>     <span class="s">utf-8</span><span class="p">;</span>
+        <span class="kn">client_max_body_size</span> <span class="mi">32m</span><span class="p">;</span>
+        <span class="kn">location</span> <span class="n">/</span> <span class="p">{</span>
+            <span class="c1"># checks for static file, if not found proxy to app
+</span>            <span class="kn">try_files</span> <span class="nv">$uri</span> <span class="s">@proxy_to_app</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kn">location</span> <span class="s">@proxy_to_app</span> <span class="p">{</span>
+            <span class="kn">proxy_set_header</span> <span class="s">X-Forwarded-For</span> <span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
+            <span class="kn">proxy_set_header</span> <span class="s">Host</span> <span class="nv">$http_host</span><span class="p">;</span>
+            <span class="kn">proxy_redirect</span> <span class="no">off</span><span class="p">;</span>
+            <span class="kn">proxy_pass</span>   <span class="s">http://app</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kn">location</span> <span class="s">'/.well-known/acme-challenge'</span> <span class="p">{</span>
+            <span class="kn">default_type</span> <span class="s">"text/plain"</span><span class="p">;</span>
+            <span class="kn">root</span>        <span class="n">/tmp/letsencrypt</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kn">server</span> <span class="p">{</span>
+        <span class="kn">listen</span>                          <span class="mi">443</span> <span class="s">ssl</span><span class="p">;</span>
+        <span class="kn">charset</span>                         <span class="s">utf-8</span><span class="p">;</span>
+        <span class="kn">ssl_certificate</span>                 <span class="n">/etc/letsencrypt/live/example.com/fullchain.pem</span><span class="p">;</span>
+        <span class="kn">ssl_certificate_key</span>             <span class="n">/etc/letsencrypt/live/example.com/privkey.pem</span><span class="p">;</span>
+        <span class="kn">ssl_protocols</span>                   <span class="s">TLSv1</span> <span class="s">TLSv1.1</span> <span class="s">TLSv1.2</span><span class="p">;</span>
+        <span class="kn">ssl_prefer_server_ciphers</span>       <span class="no">on</span><span class="p">;</span>
+        <span class="kn">ssl_dhparam</span>                     <span class="n">/etc/nginx/dhparams.pem</span><span class="p">;</span>
+        <span class="kn">ssl_ciphers</span>                     <span class="s">'ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:AES:CAMELLIA:DES-CBC3-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!aECDH:!EDH-DSS-DES-CBC3-SHA:!EDH-RSA-DES-CBC3-SHA:!KRB5-DES-CBC3-SHA'</span><span class="p">;</span>
+        <span class="kn">ssl_session_timeout</span>             <span class="s">1d</span><span class="p">;</span>
+        <span class="kn">ssl_session_cache</span>               <span class="s">shared:SSL:50m</span><span class="p">;</span>
+        <span class="kn">ssl_stapling</span>                    <span class="no">on</span><span class="p">;</span>
+        <span class="kn">ssl_stapling_verify</span>             <span class="no">on</span><span class="p">;</span>
+        <span class="kn">add_header</span>                      <span class="s">Strict-Transport-Security</span> <span class="s">max-age=15768000</span><span class="p">;</span>
+        <span class="kn">client_max_body_size</span> <span class="mi">32m</span><span class="p">;</span>
+        <span class="kn">location</span> <span class="n">/</span> <span class="p">{</span>
+            <span class="c1"># checks for static file, if not found proxy to app
+</span>            <span class="kn">try_files</span> <span class="nv">$uri</span> <span class="s">@proxy_to_app</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kn">location</span> <span class="s">@proxy_to_app</span> <span class="p">{</span>
+            <span class="kn">proxy_set_header</span> <span class="s">X-Forwarded-For</span> <span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
+            <span class="kn">proxy_set_header</span> <span class="s">Host</span> <span class="nv">$http_host</span><span class="p">;</span>
+            <span class="kn">proxy_redirect</span> <span class="no">off</span><span class="p">;</span>
+            <span class="kn">proxy_pass</span>   <span class="s">http://app</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kn">location</span> <span class="s">'/.well-known/acme-challenge'</span> <span class="p">{</span>
+            <span class="kn">default_type</span> <span class="s">"text/plain"</span><span class="p">;</span>
+            <span class="kn">root</span>        <span class="n">/tmp/letsencrypt</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>В nginx.conf мы используем volumes из контейнера letsencrypt чтобы получить доступ к ключу в директории <code class="highlighter-rouge">/.well-known/acme-challenge</code> и доступ с самим ключам SSL.</p>
+
+<p>Для генерации <code class="highlighter-rouge">dhparams.pem</code> локально используем команду <code class="highlighter-rouge">sudo openssl dhparam -out ./dhparam.pem 2048</code></p>
+
+<p>Собственно это все, поите все должно работать даже при копипасте.</p>
+
+  </div><a class="u-url" href="/2016/06/03/letsencrypt-nginx-i-docker-compose.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Yet another blog</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">vahaah</li><li><a class="u-email" href="mailto:alex.vakhitov@gmail.com">alex.vakhitov@gmail.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/vahaah"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">vahaah</span></a></li><li><a href="https://instagram.com/vahaah"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#instagram"></use></svg> <span class="username">vahaah</span></a></li><li><a href="https://www.twitter.com/vahaah"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">vahaah</span></a></li><li><a href="/rss.xml"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#rss"></use></svg> <span>RSS Feed</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Очередной блог о разработке и всем что с ней связанно</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer><!-- Yandex.Metrika counter -->
+<script type="text/javascript" >
+   (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+   m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+   (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+   ym(51639719, "init", {
+        id:51639719,
+        clickmap:true,
+        trackLinks:true,
+        accurateTrackBounce:true
+   });
+</script>
+<!-- /Yandex.Metrika counter -->
+</body>
+
+</html>

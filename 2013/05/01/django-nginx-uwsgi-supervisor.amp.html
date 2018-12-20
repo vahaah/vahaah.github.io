@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html amp lang="en">
+  <head>
+
+    <meta charset="utf-8">
+    <title>Django + nginx + uWSGI + supervisor</title>
+    <link rel="canonical" href="https://ru.vahaah.guru//2013/05/01/django-nginx-uwsgi-supervisor.html">
+    <link rel="icon" type="image/png" href="/favicon.ico">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+    <script type="application/ld+json">
+      {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "mainEntityOfPage":{
+          "@type": "WebPage",
+          "@id": "https://ru.vahaah.guru//2013/05/01/django-nginx-uwsgi-supervisor.html"
+        },
+        "headline": "Django + nginx + uWSGI + supervisor",
+        "image": {
+          "@type": "ImageObject",
+          "url": "https://www.yegor256.com/images/face-1200x1200.jpg",
+          "height": 1400,
+          "width": 1400
+        },
+        "datePublished": "2013-05-01 12:09:00",
+        "dateModified": "2013-05-01 12:09:00",
+        "author": {
+          "@type": "Person",
+          "name": "Yegor Bugayenko"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "ru.vahaah.guru",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://ru.vahaah.guru/images/face-512x512.jpg",
+            "width": 512,
+            "height": 512
+          }
+        },
+        "description": "",
+        "keywords": [""]
+      }
+    </script>
+    <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style>
+<noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,500">
+    <style amp-custom="amp-custom">
+
+      body { font-family: serif; padding: .5em; font-size: 1.2em; }
+      article { width: 600px; max-width: 100%; margin-left: auto; margin-right: auto; }
+      pre, code { font-family: 'Source Code Pro', 'Courier New', monospace; font-size: .8em; }
+      code { padding: 0 .3em; background-color: lightgray; }
+      a, a:hover, a:visited { color: inherit; }
+      .intro { color: red; font-size: .75em; }
+      .photo { border-radius: 50%; }
+      pre { overflow-x:scroll; }
+    </style>
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
+  </head>
+  <body>
+    <article>
+      <p class="intro">
+        This is a mobile version, full one is
+        <a href="https://ru.vahaah.guru//2013/05/01/django-nginx-uwsgi-supervisor.html">here</a>.
+      </p>
+      <p>
+        <amp-img src="/images/face-256x256.jpg" width="80" height="80" alt="" class="photo"></amp-img>
+      </p>
+      <p><br>1 May 2013</p>
+      <h1>Django + nginx + uWSGI + supervisor</h1>
+      <p>Думаю не нужно объяснять что пользователь под которым вы зашли не должен именоваться root. Ну если с этим проблем не замечено давайте начнем, для начала давайте поставим nginx:
+</p>
+
+<pre>sudo apt-get install python-software-properties
+sudo add-apt-repository ppa:nginx/stable
+sudo apt-get update
+sudo apt-get install nginx</pre>
+
+<p>Теперь нам нужно установить <code class="highlighter-rouge">pip</code></p>
+
+<pre>sudo apt-get install python-pip&lt;/pre&gt;</pre>
+
+<p>И собственно установка нашего виртуального окружения</p>
+
+<pre>sudo apt-get install python-virtualenv&lt;/pre&gt;</pre>
+
+<p>Теперь давайте определимся со структурой нашего сферического проекта в вакууме</p>
+
+<pre>/ - за корень возьмем папку нашего проекта
+-app
+--app2
+--app3
+--static
+--media
+--settings.py
+--urls.py
+--wsgi.py
+-manage.py
+-env
+-logs
+-pids
+-uwsgi.ini</pre>
+
+<p>По строению дерева как мне кажется все понятно, давайте приступим в первую очередь нужно создать виртуальное окружение.</p>
+
+<pre>virtualenv --prompt="project" ./env</pre>
+
+<p>теперь мы можем активировать наше виртуальное окружение</p>
+
+<pre>source ~/project/env/bin/activate</pre>
+
+<p><small class="mutted">(Для деактивации нужное ввести deactivate)</small></p>
+
+<p>Теперь мы можем поставить необходимые пакеты, для начала нам хватит 2-х</p>
+
+<pre>pip install django
+pip install uwsgi</pre>
+
+<p>Теперь давайте создадим конфигурационный файл uwsgi.ini</p>
+
+<pre>nano ~/project/uwsgi.ini</pre>
+
+<p>Содержимое файла</p>
+
+<pre>[uwsgi]
+home=/home/project/env
+chdir=/home/project
+master=True
+disable-logging=True
+vacuum=True
+pidfile=/home/project/pids/project.pid
+max-requests=5000
+socket=127.0.0.1:49001
+processes=2
+
+pythonpath=/home/project
+env=DJANGO_SETTINGS_MODULE=app.settings
+module = django.core.handlers.wsgi:WSGIHandler()
+touch-reload=/tmp/project.txt</pre>
+
+<p>Теперь давайте создадим конфиг для supervisor, он позволит нам управлять проектом и вообще будет следить, чтобы все работало</p>
+
+<pre>sudo nano /etc/supervisor/conf.d/project.conf</pre>
+
+<p>И добавляем туда следующий код</p>
+
+<pre>[program:project]
+command=/home/project/env/bin/uwsgi /home/project/uwsgi.ini
+stdout_logfile=/home/project/logs/wsgi.log
+stderr_logfile=/home/project/logs/wsgi_err.log
+autostart=true
+autorestart=true
+redirect_stderr=true
+stopwaitsecs = 60
+stopsignal=INT</pre>
+
+<p>Обновляем supervisor</p>
+
+<pre>sudo supervisorctl update</pre>
+
+<p>Пеперь мы можем проверить статус приложения командой</p>
+
+<pre>sudo supervisorctl status</pre>
+
+<p>и перезапустить</p>
+
+<pre>sudo supervisorctl restart project</pre>
+
+<p>Теперь осталось настроить nginx для работы со всеми этими чудесами Сейчас нужно создать конфигурационный файл для nginx</p>
+
+<pre>sudo nano /etc/nginx/sites-available/project.conf</pre>
+
+<p>его содержимое</p>
+
+<pre>server {
+        listen       80;
+        server_name site.com;
+        access_log  /var/log/nginx/access.log  main;
+        error_log   /var/log/nginx/error.log info;
+
+
+       location / {
+                uwsgi_pass 127.0.0.1:49001;
+                include uwsgi_params;
+       }
+
+        location /media/ {
+                alias /home/project/app/media/;
+                expires 30d;
+        }
+
+        location /static/ {
+                alias /home/project/app/static/;
+                expires 30d;
+        }
+}</pre>
+
+<p>и нужно его активировать</p>
+
+<pre>ln -s /etc/nginx/sites-available/project.conf  /etc/nginx/sites-enabled/project.conf</pre>
+
+<p>Теперь перезапускаем nginx и все должно работать</p>
+
+<pre>sudo service nginx restart</pre>
+
+
+    </article>
+  </body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html amp lang="en">
+  <head>
+
+    <meta charset="utf-8">
+    <title>Работа с не ANSI символами в строках. Golang</title>
+    <link rel="canonical" href="https://ru.vahaah.guru//2016/05/08/rabotie-s-nie-ansi-strokami-v-go.html">
+    <link rel="icon" type="image/png" href="/favicon.ico">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+    <script type="application/ld+json">
+      {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "mainEntityOfPage":{
+          "@type": "WebPage",
+          "@id": "https://ru.vahaah.guru//2016/05/08/rabotie-s-nie-ansi-strokami-v-go.html"
+        },
+        "headline": "Работа с не ANSI символами в строках. Golang",
+        "image": {
+          "@type": "ImageObject",
+          "url": "https://www.yegor256.com/images/face-1200x1200.jpg",
+          "height": 1400,
+          "width": 1400
+        },
+        "datePublished": "2016-05-08 05:13:22",
+        "dateModified": "2016-05-08 05:13:22",
+        "author": {
+          "@type": "Person",
+          "name": "Yegor Bugayenko"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "ru.vahaah.guru",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://ru.vahaah.guru/images/face-512x512.jpg",
+            "width": 512,
+            "height": 512
+          }
+        },
+        "description": "",
+        "keywords": [""]
+      }
+    </script>
+    <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style>
+<noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,500">
+    <style amp-custom="amp-custom">
+
+      body { font-family: serif; padding: .5em; font-size: 1.2em; }
+      article { width: 600px; max-width: 100%; margin-left: auto; margin-right: auto; }
+      pre, code { font-family: 'Source Code Pro', 'Courier New', monospace; font-size: .8em; }
+      code { padding: 0 .3em; background-color: lightgray; }
+      a, a:hover, a:visited { color: inherit; }
+      .intro { color: red; font-size: .75em; }
+      .photo { border-radius: 50%; }
+      pre { overflow-x:scroll; }
+    </style>
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
+  </head>
+  <body>
+    <article>
+      <p class="intro">
+        This is a mobile version, full one is
+        <a href="https://ru.vahaah.guru//2016/05/08/rabotie-s-nie-ansi-strokami-v-go.html">here</a>.
+      </p>
+      <p>
+        <amp-img src="/images/face-256x256.jpg" width="80" height="80" alt="" class="photo"></amp-img>
+      </p>
+      <p><br>8 May 2016</p>
+      <h1>Работа с не ANSI символами в строках. Golang</h1>
+      <p>В случае если мы работаем с обычными ANSI символами строках все понятно и все практически как везде. Мы можем работать со строкой посимвольно, примерно как с массивом или срезом. Можем получать срез строки и тд.</p>
+
+
+
+<pre>text := "test"
+text[0] // получим 116, что равняется unicode коду символа "t"
+string(text[0]) // получим "t"
+text[1:] // получим "est"</pre>
+
+<p>Но как только мы начнем использовать не английский язык в строках все тут же сломается:</p>
+
+<pre>text := "тест"
+text[0] // получим 209, что равняется unicode коду символа "Ñ"
+string(text[0]) // получим "Ñ"
+text[1:] // получим "�ест"</pre>
+
+<p>Самый простой ран устранить эту проблему это привести нашу строку к типу rune. После этого каждый символ нашей строки будет представлен 4х байтовым unicode кодом.</p>
+
+<pre>text := "тест"
+runeText := []rune(text)
+runeText[0] // получим 1090, что равняется unicode коду символа "т"
+string(runeText[0]) // получим "т"
+runeText[1:] // получим "[1077 1089 1090]" т.е теперь нужно использовать функцию string для вывода среза
+string(runeText[1:]) //  получим "ест"</pre>
+
+
+    </article>
+  </body>
+</html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html amp lang="en">
+  <head>
+
+    <meta charset="utf-8">
+    <title>Структура Django проекта</title>
+    <link rel="canonical" href="https://ru.vahaah.guru//2013/09/01/django_structure.html">
+    <link rel="icon" type="image/png" href="/favicon.ico">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+    <script type="application/ld+json">
+      {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "mainEntityOfPage":{
+          "@type": "WebPage",
+          "@id": "https://ru.vahaah.guru//2013/09/01/django_structure.html"
+        },
+        "headline": "Структура Django проекта",
+        "image": {
+          "@type": "ImageObject",
+          "url": "https://www.yegor256.com/images/face-1200x1200.jpg",
+          "height": 1400,
+          "width": 1400
+        },
+        "datePublished": "2013-09-01 12:24:00",
+        "dateModified": "2013-09-01 12:24:00",
+        "author": {
+          "@type": "Person",
+          "name": "Yegor Bugayenko"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "ru.vahaah.guru",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://ru.vahaah.guru/images/face-512x512.jpg",
+            "width": 512,
+            "height": 512
+          }
+        },
+        "description": "",
+        "keywords": [""]
+      }
+    </script>
+    <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style>
+<noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,500">
+    <style amp-custom="amp-custom">
+
+      body { font-family: serif; padding: .5em; font-size: 1.2em; }
+      article { width: 600px; max-width: 100%; margin-left: auto; margin-right: auto; }
+      pre, code { font-family: 'Source Code Pro', 'Courier New', monospace; font-size: .8em; }
+      code { padding: 0 .3em; background-color: lightgray; }
+      a, a:hover, a:visited { color: inherit; }
+      .intro { color: red; font-size: .75em; }
+      .photo { border-radius: 50%; }
+      pre { overflow-x:scroll; }
+    </style>
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
+  </head>
+  <body>
+    <article>
+      <p class="intro">
+        This is a mobile version, full one is
+        <a href="https://ru.vahaah.guru//2013/09/01/django_structure.html">here</a>.
+      </p>
+      <p>
+        <amp-img src="/images/face-256x256.jpg" width="80" height="80" alt="" class="photo"></amp-img>
+      </p>
+      <p><br>1 September 2013</p>
+      <h1>Структура Django проекта</h1>
+      <p>Все мы знаем что есть очень много вариантов структуры для <strong>Django</strong> проекта и большинство из них вполне нормальные, но я хочу рассказать как я храню проекты, и вообще структуру приложений в проекте</p>
+
+
+
+<p>Для примера наш проект будет называться <strong>prjct</strong>. Для названий других примеров я буду добавлять к названию число, т.е. <strong>prjct1</strong>, <strong>prjct2</strong> и тд. Для названия приложений я буду такую же структуру <strong>app0</strong>, <strong>app1</strong>, <strong>app2</strong> и тд. В качестве пользователя будем использовать мифического юзера django</p>
+
+<h3 id="Структура-проектов-в-директории-">Структура проектов в директории ~/</h3>
+<p>Для хранения проектов я использую домашнюю директорию, никаких /var, /srv. Все проекты хранятся в директории <code>~/projects/</code>:</p>
+
+<pre>~/projects/
+        project/
+        project1/
+        project2/
+        …..</pre>
+
+<p>Каждый проект имеет свое виртуальное окружение, виртуальное окружение называется также как проект, все виртуальные окружения хранятся в директории <code>~/.envs/</code> :</p>
+
+<pre>~/.envs/
+        project/
+        project1/
+        project2/
+        …..</pre>
+
+<p>т.е. для доступа к любому виртуальному окружению проекта нужно ввести <code class="highlighter-rouge">source ~/.envs/&lt;имя_проекта&gt;/bin/activate</code> .</p>
+
+<p>Все логи хранятся в директории <code>~/logs/</code>, как вы уже поняли логи каждого проекта хранятся в своей директории с именем проекта:</p>
+
+<pre>~/logs/
+        project/
+                errors.log
+                ...
+        project1/
+                errors.log
+                ...  
+        project2/
+                errors.log
+                ...  
+        …..</pre>
+
+<p>Всю статику и медиа файлы я храню в директории с проектом.</p>
+
+<h3 id="Структура-проекта">Структура проекта</h3>
+
+<pre>~/projects/
+        project/
+                apps/
+                        app1/
+                                admin.py
+                                models.py
+                                ….
+                        app2/
+                                admin.py
+                                models.py
+                                ….  
+                        …
+                conf/
+                        nginx/
+                                project.conf
+                                ...
+                        supervisor/
+                                project.conf
+                                ...
+                project/
+                        settings.py
+                        urls.py
+                        ...
+                run/
+                        run.sh
+                        ...
+                staticfiles/
+                        css/
+                                project.css
+                                ...
+                        js/
+                                project.js
+                                ...
+                        …
+                templates/
+                        base.html
+                        …    
+                fabfile.py
+                manage.py
+                requirements.txt
+
+                media/
+                        …   
+                static/
+                        …  </pre>
+
+<p>Теперь объясняю по порядку:</p>
+
+<dl class="dl-horizontal">
+        <dt>project/apps/</dt>
+        <dd>здесь хранятся все приложения проекта, в самом приложении хранятся middleware, context_processors и в все остальные части нужные для этого приложения, все части нужные для проекта целиком хранятся в project/project/</dd>
+        <dt>project/conf/</dt>
+        <dd>здесь хранятся все конфигурационные файлы для nginx, supervisor и тд.</dd>       
+        <dt>project/project/</dt>
+        <dd>это приложение созданное при старте проекта, здесь хранятся settings, urls,  middleware, context_processors для всего проетка</dd>       
+        <dt>project/run/</dt>
+        <dd>скрипт запуска gunicorn</dd>     
+        <dt>project/staticfiles/</dt>
+        <dd>статика, которая будет собираться collectstatic (эта папка хранится в git)</dd>     
+        <dt>project/templates/</dt>
+        <dd>папка с шаблонами</dd>      
+        <dt>fabfile.py</dt>
+        <dd>файл для Fabric</dd>      
+        <dt>requirements.txt</dt>
+        <dd>файл с зависимостями</dd>     
+        <dt>project/media/</dt>
+        <dd>папка с медиа файлами (не хранится в git)</dd>        
+        <dt>project/static/</dt>
+        <dd>папка со всей статикой проекта после collectstatic (не хранится в git)</dd>
+</dl>
+
+<p>В общем это все, благодаря такой структуре можно без проблем создавать скрипты для создания окружения, использовать один и тот же <strong>fabfile.py</strong> и развертывать окружение почти на автомате.</p>
+
+    </article>
+  </body>
+</html>

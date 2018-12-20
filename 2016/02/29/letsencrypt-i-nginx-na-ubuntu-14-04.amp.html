@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html amp lang="en">
+  <head>
+
+    <meta charset="utf-8">
+    <title>Letsencrypt и nginx на Ubuntu 14.04</title>
+    <link rel="canonical" href="https://ru.vahaah.guru//2016/02/29/letsencrypt-i-nginx-na-ubuntu-14-04.html">
+    <link rel="icon" type="image/png" href="/favicon.ico">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+    <script type="application/ld+json">
+      {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "mainEntityOfPage":{
+          "@type": "WebPage",
+          "@id": "https://ru.vahaah.guru//2016/02/29/letsencrypt-i-nginx-na-ubuntu-14-04.html"
+        },
+        "headline": "Letsencrypt и nginx на Ubuntu 14.04",
+        "image": {
+          "@type": "ImageObject",
+          "url": "https://www.yegor256.com/images/face-1200x1200.jpg",
+          "height": 1400,
+          "width": 1400
+        },
+        "datePublished": "2016-02-29 13:16:03",
+        "dateModified": "2016-02-29 13:16:03",
+        "author": {
+          "@type": "Person",
+          "name": "Yegor Bugayenko"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "ru.vahaah.guru",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://ru.vahaah.guru/images/face-512x512.jpg",
+            "width": 512,
+            "height": 512
+          }
+        },
+        "description": "",
+        "keywords": [""]
+      }
+    </script>
+    <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style>
+<noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,500">
+    <style amp-custom="amp-custom">
+
+      body { font-family: serif; padding: .5em; font-size: 1.2em; }
+      article { width: 600px; max-width: 100%; margin-left: auto; margin-right: auto; }
+      pre, code { font-family: 'Source Code Pro', 'Courier New', monospace; font-size: .8em; }
+      code { padding: 0 .3em; background-color: lightgray; }
+      a, a:hover, a:visited { color: inherit; }
+      .intro { color: red; font-size: .75em; }
+      .photo { border-radius: 50%; }
+      pre { overflow-x:scroll; }
+    </style>
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
+  </head>
+  <body>
+    <article>
+      <p class="intro">
+        This is a mobile version, full one is
+        <a href="https://ru.vahaah.guru//2016/02/29/letsencrypt-i-nginx-na-ubuntu-14-04.html">here</a>.
+      </p>
+      <p>
+        <amp-img src="/images/face-256x256.jpg" width="80" height="80" alt="" class="photo"></amp-img>
+      </p>
+      <p><br>29 February 2016</p>
+      <h1>Letsencrypt и nginx на Ubuntu 14.04</h1>
+      <p>Хочу рассказать как настроить Letsencrypt на Ubuntu 14.04 совместно с nginx и сделать автопродление сертификатов.</p>
+
+
+
+<p>Начнем с того что нужно поставить git</p>
+
+<pre>apt-get -y install git</pre>
+
+<p>Далее скачиваем сам letsencrypt:</p>
+
+<pre>git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt</pre>
+
+<p>Теперь нужно проверить что 80 порт доступен для этого нужно отключить nginx</p>
+
+<pre>service nginx stop</pre>
+
+<p>Ну и убедимся что все свободно и ничего нам не мешает:</p>
+
+<pre>service nginx stop</pre>
+
+<p>Теперь преступим к выпуску сертификата, мы будем использовать Standalone плагин для этого:</p>
+
+<pre>cd /opt/letsencrypt
+./letsencrypt-auto certonly --standalone</pre>
+
+<p>Нам нужно будем ввести домен к которому мы выпустим сертификат (если нужно выпустить сертификаты к нескольким доменам для разделения нужно использовать “пробел”)</p>
+
+<p>После этого действия у нас появится наш первый сертификат, по умолчанию все сертификаты хранятся в директории <code class="highlighter-rouge">/etc/letsencrypt/live/имя_домен</code>.</p>
+
+<p>Теперь заставим все это работать с nginx. Для начала настроим переадресацию на https</p>
+
+<pre>server {
+    listen 80;
+    server_name example.com www.example.com;
+    return 301 https://$host$request_uri;
+}</pre>
+
+<p>И конфигурация для 443 порта:</p>
+
+<pre>server {
+    listen 443;
+    server_name example.com www.example.com;
+
+    ssl on;
+    ssl_certificate /etc/letsencrypt/live/example.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/example.com/privkey.pem;
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    ssl_prefer_server_ciphers on;
+    ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
+}</pre>
+
+<p>Теперь все работает, но как вы можете видеть срок жизни нашего сертификата всего месяц и очень не хочется каждый раз проделывать данные действия в ручную. Поэтому сейчас я опишу как настроить автопродление сертификатов.</p>
+
+<p>Для этого мы будем использовать Webroot плагин. Он создает скрытую директорию <code class="highlighter-rouge">/.well-known</code> в корне вашего сайта используемую для валидации самим letsencrypt. Я предлагаю вынести эту директорию из корня всех сайтов, и расположить в <code class="highlighter-rouge">/var/www/</code>. Для этого нужно добавить в конф. файл nginx такой блок:</p>
+
+<pre>location /.well-known/ {
+    alias /var/www/.well-known/;
+    allow all;
+}</pre>
+
+<p>Теперь проверим все ли корректно работает:</p>
+
+<pre>cd /opt/letsencrypt
+./letsencrypt-auto certonly -a webroot --agree-tos --renew-by-default --webroot-path=/var/www -d example.com -d www.example.com</pre>
+
+<p>И мы должны получить сообщение</p>
+
+<pre>IMPORTANT NOTES:
+ - Congratulations! Your certificate and chain have been saved at
+   /etc/letsencrypt/live/example.com/fullchain.pem. Your cert will expire
+   on 2016-05-29. To obtain a new version of the certificate in the
+   future, simply run Let's Encrypt again.
+ - If you like Let's Encrypt, please consider supporting our work by:
+
+   Donating to ISRG / Let's Encrypt:   https://letsencrypt.org/donate
+   Donating to EFF:                    https://eff.org/donate-le</pre>
+
+<p>Теперь давайте приступим к автоматизации данного действия. Для начала нужно создать конфигурационый файл, мы скопируем его и примеров в самом letsencrypt</p>
+
+<pre>cp /opt/letsencrypt/examples/cli.ini /usr/local/etc/le-renew-webroot.ini</pre>
+
+<p>И отредактируем так как нам нужно</p>
+
+<pre>vi /usr/local/etc/le-renew-webroot.ini</pre>
+
+<p>На выходе мы должны получить такой конфиг:</p>
+
+<pre>rsa-key-size = 4096
+
+email = you@example.com
+
+domains = example.com, www.example.com
+
+webroot-path = /var/www</pre>
+
+<p>Теперь проверим наш конфигурационный файл:</p>
+
+<pre>cd /opt/letsencrypt
+./letsencrypt-auto certonly -a webroot --renew-by-default --config /usr/local/etc/le-renew-webroot.ini</pre>
+
+<p>Теперь создадим скрипт для автоматического выполнения продления если нашему сертификату осталось жить меньше 30 дней. К своему счастью я нашел готовое решение <a href="https://gist.github.com/thisismitch/e1b603165523df66d5cc">gist.github.com/thisismitch</a>.</p>
+
+<p>Здесь делаем все просто</p>
+
+<pre>curl -L -o /usr/local/sbin/le-renew-webroot https://gist.githubusercontent.com/thisismitch/e1b603165523df66d5cc/raw/fbffbf358e96110d5566f13677d9bd5f4f65794c/le-renew-webroot
+chmod +x /usr/local/sbin/le-renew-webroot</pre>
+
+<p>Проверяем наш скрипт:</p>
+
+<pre>le-renew-webroot</pre>
+
+<p>И добавляем его в crontab</p>
+
+<pre>crontab -e</pre>
+
+<pre>30 2 * * 1 /usr/local/sbin/le-renew-webroot &gt;&gt; /var/log/le-renewal.log</pre>
+
+<p>Лог всех действий будет доступен в <code class="highlighter-rouge">/var/log/le-renewal.log</code></p>
+
+<p>Вот собственно и все. Также в процессе написания нашел на просторах более полную и подробно расписанную инструкцию на <a href="https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-14-04">английском </a> собственно часть со скриптом обновления и утащил из нее</p>
+
+    </article>
+  </body>
+</html>

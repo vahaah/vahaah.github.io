@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html amp lang="en">
+  <head>
+
+    <meta charset="utf-8">
+    <title>Letsencrypt, NGINX и Docker Compose</title>
+    <link rel="canonical" href="https://ru.vahaah.guru//2016/06/03/letsencrypt-nginx-i-docker-compose.html">
+    <link rel="icon" type="image/png" href="/favicon.ico">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+    <script type="application/ld+json">
+      {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "mainEntityOfPage":{
+          "@type": "WebPage",
+          "@id": "https://ru.vahaah.guru//2016/06/03/letsencrypt-nginx-i-docker-compose.html"
+        },
+        "headline": "Letsencrypt, NGINX и Docker Compose",
+        "image": {
+          "@type": "ImageObject",
+          "url": "https://www.yegor256.com/images/face-1200x1200.jpg",
+          "height": 1400,
+          "width": 1400
+        },
+        "datePublished": "2016-06-03 16:33:50",
+        "dateModified": "2016-06-03 16:33:50",
+        "author": {
+          "@type": "Person",
+          "name": "Yegor Bugayenko"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "ru.vahaah.guru",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://ru.vahaah.guru/images/face-512x512.jpg",
+            "width": 512,
+            "height": 512
+          }
+        },
+        "description": "",
+        "keywords": [""]
+      }
+    </script>
+    <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style>
+<noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,500">
+    <style amp-custom="amp-custom">
+
+      body { font-family: serif; padding: .5em; font-size: 1.2em; }
+      article { width: 600px; max-width: 100%; margin-left: auto; margin-right: auto; }
+      pre, code { font-family: 'Source Code Pro', 'Courier New', monospace; font-size: .8em; }
+      code { padding: 0 .3em; background-color: lightgray; }
+      a, a:hover, a:visited { color: inherit; }
+      .intro { color: red; font-size: .75em; }
+      .photo { border-radius: 50%; }
+      pre { overflow-x:scroll; }
+    </style>
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
+  </head>
+  <body>
+    <article>
+      <p class="intro">
+        This is a mobile version, full one is
+        <a href="https://ru.vahaah.guru//2016/06/03/letsencrypt-nginx-i-docker-compose.html">here</a>.
+      </p>
+      <p>
+        <amp-img src="/images/face-256x256.jpg" width="80" height="80" alt="" class="photo"></amp-img>
+      </p>
+      <p><br>3 June 2016</p>
+      <h1>Letsencrypt, NGINX и Docker Compose</h1>
+      <p>Привожу самый простой вариант того как запустить letsencrypt с помощью docker compose.</p>
+
+
+
+<p>docker-compose.yml</p>
+
+<pre>version: '2'
+
+services:
+  nginx:
+    restart: always
+    image: nginx
+    hostname: example.com
+    build: ./compose/nginx
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./letsencrypt/conf:/etc/letsencrypt
+      - ./letsencrypt/html:/tmp/letsencrypt
+    environment:
+      - LE_RENEW_HOOK=docker kill -s HUP @CONTAINER_NAME@
+
+  letsencrypt:
+    restart: always
+    image: kvaps/letsencrypt-webroot
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./letsencrypt/conf:/etc/letsencrypt
+      - ./letsencrypt/html:/tmp/letsencrypt
+    links:
+      - nginx
+    environment:
+      - DOMAINS=example.com www.example.com
+      - EMAIL=example@gmail.com
+      - WEBROOT_PATH=/tmp/letsencrypt
+      - EXP_LIMIT=30
+      - CHECK_FREQ=30</pre>
+
+<p>Как видно из docker-compose.yml мы используем <a href="https://hub.docker.com/r/kvaps/letsencrypt-webroot/">kvaps/letsencrypt-webroot</a> для контейнера letsencrypt и расшариваем файловую систему между ним и контейнером nginx. Dockerfile для контейнера nginx находится в директории <code class="highlighter-rouge">/compose/nginx</code></p>
+
+<p>Dockerfile для nginx</p>
+
+<pre>FROM nginx:latest
+ADD nginx.conf /etc/nginx/nginx.conf
+ADD dhparams.pem /etc/nginx/dhparams.pem</pre>
+
+<p>Мы используем стандартную сборку nginx и просто копируем nginx.conf из директории c Dockerfile в контейнер.</p>
+
+<p>Содержимое nginx.conf:</p>
+
+<pre>user  nginx;
+worker_processes  1;
+error_log  /var/log/nginx/error.log warn;
+pid        /var/run/nginx.pid;
+events {
+    worker_connections  1024;
+}
+http {
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+    access_log  /var/log/nginx/access.log  main;
+    sendfile        on;
+    keepalive_timeout  65;
+    upstream app {
+        server django:5000;
+    }
+    server {
+        listen 80;
+        charset     utf-8;
+        client_max_body_size 32m;
+        location / {
+            # checks for static file, if not found proxy to app
+            try_files $uri @proxy_to_app;
+        }
+        location @proxy_to_app {
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header Host $http_host;
+            proxy_redirect off;
+            proxy_pass   http://app;
+        }
+        location '/.well-known/acme-challenge' {
+            default_type "text/plain";
+            root        /tmp/letsencrypt;
+        }
+    }
+    server {
+        listen                          443 ssl;
+        charset                         utf-8;
+        ssl_certificate                 /etc/letsencrypt/live/example.com/fullchain.pem;
+        ssl_certificate_key             /etc/letsencrypt/live/example.com/privkey.pem;
+        ssl_protocols                   TLSv1 TLSv1.1 TLSv1.2;
+        ssl_prefer_server_ciphers       on;
+        ssl_dhparam                     /etc/nginx/dhparams.pem;
+        ssl_ciphers                     'ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:AES:CAMELLIA:DES-CBC3-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!aECDH:!EDH-DSS-DES-CBC3-SHA:!EDH-RSA-DES-CBC3-SHA:!KRB5-DES-CBC3-SHA';
+        ssl_session_timeout             1d;
+        ssl_session_cache               shared:SSL:50m;
+        ssl_stapling                    on;
+        ssl_stapling_verify             on;
+        add_header                      Strict-Transport-Security max-age=15768000;
+        client_max_body_size 32m;
+        location / {
+            # checks for static file, if not found proxy to app
+            try_files $uri @proxy_to_app;
+        }
+        location @proxy_to_app {
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header Host $http_host;
+            proxy_redirect off;
+            proxy_pass   http://app;
+        }
+        location '/.well-known/acme-challenge' {
+            default_type "text/plain";
+            root        /tmp/letsencrypt;
+        }
+    }
+}</pre>
+
+<p>В nginx.conf мы используем volumes из контейнера letsencrypt чтобы получить доступ к ключу в директории <code class="highlighter-rouge">/.well-known/acme-challenge</code> и доступ с самим ключам SSL.</p>
+
+<p>Для генерации <code class="highlighter-rouge">dhparams.pem</code> локально используем команду <code class="highlighter-rouge">sudo openssl dhparam -out ./dhparam.pem 2048</code></p>
+
+<p>Собственно это все, поите все должно работать даже при копипасте.</p>
+
+    </article>
+  </body>
+</html>

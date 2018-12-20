@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html amp lang="en">
+  <head>
+
+    <meta charset="utf-8">
+    <title>Настройка сервера для Django. Gunicorn + Nginx + Ubuntu</title>
+    <link rel="canonical" href="https://ru.vahaah.guru//2014/02/28/nastroika-sierviera-dlia-django-gunicorn-nginx-ubuntu.html">
+    <link rel="icon" type="image/png" href="/favicon.ico">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+    <script type="application/ld+json">
+      {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "mainEntityOfPage":{
+          "@type": "WebPage",
+          "@id": "https://ru.vahaah.guru//2014/02/28/nastroika-sierviera-dlia-django-gunicorn-nginx-ubuntu.html"
+        },
+        "headline": "Настройка сервера для Django. Gunicorn + Nginx + Ubuntu",
+        "image": {
+          "@type": "ImageObject",
+          "url": "https://www.yegor256.com/images/face-1200x1200.jpg",
+          "height": 1400,
+          "width": 1400
+        },
+        "datePublished": "2014-02-28 12:28:00",
+        "dateModified": "2014-02-28 12:28:00",
+        "author": {
+          "@type": "Person",
+          "name": "Yegor Bugayenko"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "ru.vahaah.guru",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://ru.vahaah.guru/images/face-512x512.jpg",
+            "width": 512,
+            "height": 512
+          }
+        },
+        "description": "",
+        "keywords": [""]
+      }
+    </script>
+    <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style>
+<noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,500">
+    <style amp-custom="amp-custom">
+
+      body { font-family: serif; padding: .5em; font-size: 1.2em; }
+      article { width: 600px; max-width: 100%; margin-left: auto; margin-right: auto; }
+      pre, code { font-family: 'Source Code Pro', 'Courier New', monospace; font-size: .8em; }
+      code { padding: 0 .3em; background-color: lightgray; }
+      a, a:hover, a:visited { color: inherit; }
+      .intro { color: red; font-size: .75em; }
+      .photo { border-radius: 50%; }
+      pre { overflow-x:scroll; }
+    </style>
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
+  </head>
+  <body>
+    <article>
+      <p class="intro">
+        This is a mobile version, full one is
+        <a href="https://ru.vahaah.guru//2014/02/28/nastroika-sierviera-dlia-django-gunicorn-nginx-ubuntu.html">here</a>.
+      </p>
+      <p>
+        <amp-img src="/images/face-256x256.jpg" width="80" height="80" alt="" class="photo"></amp-img>
+      </p>
+      <p><br>28 February 2014</p>
+      <h1>Настройка сервера для Django. Gunicorn + Nginx + Ubuntu</h1>
+      <p>В этой заметке я хочу описать процесс настройки боевого сервера для хостинга Django проектов. И так нам потребуется 30 минут времени и сервер на  Ubuntu 12.*</p>
+
+
+
+<p>Для начала необходимо создать пользователя и запретить автоизацию из под root</p>
+
+<pre>adduser django
+adduser django sudo</pre>
+
+<p>теперь необходимо зайти на сервер из под <strong>root’а</strong></p>
+
+<pre>nano /etc/ssh/sshd_config</pre>
+
+<p>и выставляем <code class="highlighter-rouge">PermitRootLogin no</code></p>
+
+<p>Перезапускаем ssh</p>
+
+<pre>service ssh restart</pre>
+
+<p>Теперь нужно перезайти на сервер под пользователем <strong>django</strong> и с этого момента мы будем использовать команду <strong>sudo</strong></p>
+
+<p>Для удобной работой с файловой системой предлагаю поставить <strong>Midnight Commander</strong></p>
+
+<pre>sudo apt-get install mc
+sudo mc</pre>
+
+<p>Для удобной работы с репозиториями ставим <strong>python-software-properties</strong></p>
+
+<pre>sudo apt-get install python-software-properties</pre>
+
+<p>Дабавляем репозитории Nginx</p>
+
+<pre>sudo add-apt-repository ppa:nginx/stable
+sudo apt-get update</pre>
+
+<p>Ставим необходимые пакеты</p>
+
+<pre>sudo apt-get install nginx mysql-server mysql-client libmysqlclient-dev python-mysqldb python-pip python-virtualenv supervisor git-core redis-server gunicorn make g++ python-dev</pre>
+
+<p>Можно еще установить <strong>postfix</strong> для отправки email, но я чаще пользуюсь smtp</p>
+
+<pre>sudo apt-get install postfix</pre>
+
+<h3 id="Структура-проектов">Структура проектов</h3>
+
+<p>Для структуризации файлов в проекте мы будем пользоваться вот этой моей <a href="//2013/09/01/django_structure.html">заметкой</a>.</p>
+
+<p>А по поводу хранения самих проектов могу сказать следующее, в домашней папке создадим 3 директории</p>
+
+<pre>cd ~/
+mkdir projects #папка с проектами
+mkdir logs #папка с логами
+mkdir .envs #папка с виртуальными окружениями</pre>
+
+<h3 id="Виртуальные-окружения">Виртуальные окружения</h3>
+<p>Теперь давайте подготовим виртуальные окружения для старта, как я писал в заметке о структуре проектов мы будем называть окружение также как называется проект в нашем случае это <strong>prjct</strong></p>
+
+<pre>cd ~/
+virtualenv —prompt="prjct" .envs/prjct</pre>
+
+<p>И теперь мы можем использовать наше виртуальное окружение для проекта</p>
+
+<pre>source ~/.envs/prjct/bin/activate</pre>
+
+<h3 id="Создание-БД-в-mysql">Создание БД в MySQL</h3>
+
+<p>Заходим в <strong>mysql под пользователем root</strong> и с паролем который мы указали когда ставили пакет</p>
+
+<pre>mysql -u root -p PASSWORD
+#создаем БД
+prjctmysql&gt; CREATE DATABASE IF NOT EXISTS &amp;#96;prjct&amp;#96; DEFAULT CHARACTER SET &amp;#96;utf8&amp;#96; COLLATE &amp;#96;utf8_unicode_ci&amp;#96;;
+#создаем пользователя prjct
+mysql&gt; CREATE USER 'prjct'@'localhost' IDENTIFIED BY '$password’; # укажите пароль вместо $password
+#Даем пользователю права на БД
+mysql&gt; GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER ON &amp;#96;prjct&amp;#96;.* TO 'prjct'@'localhost’;
+mysql&gt; exit;</pre>
+
+<p>Теперь вносим эти настройки в свой <strong>settings.py</strong> <em>(лучше конечно настройки БД вынести в отдельный файл settings_local.py, чтобы было проще при разработке)</em></p>
+
+<h3 id="Перенос-проекта">Перенос проекта</h3>
+
+<p>Теперь копируем проект в директорию <strong>~/projects/prjct/</strong>. Вы можете перенести файлы использую sftp или же скопировать из своего репозитория, если вы используете git. После того как вы скопировали все файлы проекта, нужно выполнить установку всех зависимостей <em>(они должны быть записаны в файле requirements.txt)</em></p>
+
+<pre>pip install -r requirements.txt</pre>
+
+<p>Дальше проверим все ли работает и выполним все служебные команды</p>
+
+<pre>python manage.py validate #если все хорошо продолжаем
+python manage.py syncdb
+python manage.py migrate
+python manage.py collectstatic —noinput</pre>
+
+<p>Теперь нужно создать директорию в которой мы будем хранить все логи проекта:</p>
+
+<pre>mkdir ~/logs/prjct</pre>
+
+<h3 id="Настройка-supervisor-и-gunicorn">Настройка supervisor и gunicorn</h3>
+
+<p>Теперь установим настройки нашего проекта в <strong>supervisor</strong>. В директории с проетом у нас должна быть создана директория <strong>conf</strong> и в ней директория <strong>supervisor</strong> в которой лежит файл <strong>prjct.conf</strong>. Я всегда храню их в директории с проектом, чтобы их содержимое можно было контолировать и при переносе с сервера на сервер просто копировать.</p>
+
+<p>Содержимое файла</p>
+
+<pre>[program:prjct]
+
+command=sh /home/django/projects/prjct/run/run.sh
+directory=/home/django/projects/prjct
+user=django
+autostart=true
+autorestart=true
+stderr_logfile=/home/django/logs/prjct/errors.log
+stdout_logfile=/home/django/logs/prjct/access.log</pre>
+
+<p>Теперь отдаем файл настроек supervisor’у</p>
+
+<pre>cd ~/projects/prjct/conf/supervisor
+sudo ln prjct.conf /etc/supervisor/conf.d/prjct.conf
+sudo supervisorctl update
+sudo supervisorctl status</pre>
+
+<p>После последней команды мы должны увидеть наш проект в списке и то что он не работает. А не работает он потому что у нас нет файла для запуска gunicorn <strong>/home/django/projects/prjct/run/run.sh</strong>, собственно его нужно создать и его содержимое будет таково:</p>
+
+<pre>#!/bin/sh
+
+NAME=prjc
+SRCDIR=prjc
+
+GUNICORN=/usr/bin/gunicorn_django
+HOMEDIR=/home/django
+
+VIRTUALENV=${HOMEDIR}/.virtualenvs/${NAME}
+PROJECTDIR=${HOMEDIR}/projects/${NAME}
+SOCKFILE=/tmp/${NAME}.sock
+MANAGE=${PROJECTDIR}/manage.py
+
+. ${VIRTUALENV}/bin/activate
+python ${MANAGE} run_gunicorn --bind unix:${SOCKFILE}</pre>
+
+<p>Теперь перезапускаем наше приложение и смотрим статус:</p>
+
+<pre>sudo supervisorctl restart prjct
+sudo supervisorctl status</pre>
+
+<p>Поидее все должно работать (:</p>
+
+<h3 id="Настройка-nginx">Настройка NGINX</h3>
+
+<p>В директории conf у нас должна быть директория nginx где мы будем хранить конфигурационный файл для nginx. Собственно вот создержимое файла <strong>~/projects/prjct/conf/nginx/prjct.conf</strong>:</p>
+
+<pre>upstream prjct_server{
+
+server unix:/tmp/prjct.sock fail_timeout=0;
+}
+
+server {
+    listen 80;
+    server_name prjct_domain;
+    if ($http_host = www.prjct_domain) {
+        rewrite (.*) http://prjct_domain$1 permanent;
+}
+
+
+location / {
+client_max_body_size 20m;
+
+proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+proxy_set_header Host $http_host;
+proxy_redirect off;
+proxy_pass http://prjct_server;
+autoindex on;
+}
+
+
+location /media {
+root /home/django/projects/prjct;
+autoindex off;
+expires max;
+access_log off;
+}
+
+location /static {
+root /home/django/projects/prjct;
+autoindex off;
+expires max;
+access_log off;
+}
+
+access_log /var/log/nginx/prjct.access.log;
+error_log /var/log/nginx/prjct.error.log;</pre>
+
+<p>Этот файл необходимо скопировать к конфигам nginx</p>
+
+<pre>cd ~/projects/prjct/conf/nginx
+sudo ln prjct.conf /etc/nginx/sites-enabled/prjct.conf</pre>
+
+<p>И последнее что осталось это перезапустить nginx</p>
+
+<pre>sudo service nginx restart</pre>
+
+<p>И теперь все должно работать</p>
+
+    </article>
+  </body>
+</html>

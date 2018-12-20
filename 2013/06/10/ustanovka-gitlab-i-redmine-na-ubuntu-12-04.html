@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ru"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Установка GitLab и Redmine на Ubuntu 12.04 | Yet another blog</title>
+<meta name="generator" content="Jekyll v3.6.3" />
+<meta property="og:title" content="Установка GitLab и Redmine на Ubuntu 12.04" />
+<meta name="author" content="vahaah" />
+<meta property="og:locale" content="ru" />
+<meta name="description" content="Для начала скажу пару слов о том что есть что. GitLab, на мой взгляд, это лучшая веб обертка над git, и если быть совсем кратким это свой личный GitHub. Redmine это отличный менеджер проектов. Как мне кажется это две очень необходимые вещи для любого разработчика" />
+<meta property="og:description" content="Для начала скажу пару слов о том что есть что. GitLab, на мой взгляд, это лучшая веб обертка над git, и если быть совсем кратким это свой личный GitHub. Redmine это отличный менеджер проектов. Как мне кажется это две очень необходимые вещи для любого разработчика" />
+<link rel="canonical" href="https://ru.vahaah.guru/2013/06/10/ustanovka-gitlab-i-redmine-na-ubuntu-12-04.html" />
+<meta property="og:url" content="https://ru.vahaah.guru/2013/06/10/ustanovka-gitlab-i-redmine-na-ubuntu-12-04.html" />
+<meta property="og:site_name" content="Yet another blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2013-06-10T12:16:00+04:00" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@vahaah" />
+<meta name="twitter:creator" content="@vahaah" />
+<meta name="google-site-verification" content="11p66_UM03GRxdmvTd90BBQn7G2eVFDmtyaFtQ5O540" />
+<meta name="yandex-verification" content="b515e98375753ead" />
+<script type="application/ld+json">
+{"description":"Для начала скажу пару слов о том что есть что. GitLab, на мой взгляд, это лучшая веб обертка над git, и если быть совсем кратким это свой личный GitHub. Redmine это отличный менеджер проектов. Как мне кажется это две очень необходимые вещи для любого разработчика","author":{"@type":"Person","name":"vahaah"},"@type":"BlogPosting","url":"https://ru.vahaah.guru/2013/06/10/ustanovka-gitlab-i-redmine-na-ubuntu-12-04.html","headline":"Установка GitLab и Redmine на Ubuntu 12.04","dateModified":"2013-06-10T12:16:00+04:00","datePublished":"2013-06-10T12:16:00+04:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://ru.vahaah.guru/2013/06/10/ustanovka-gitlab-i-redmine-na-ubuntu-12-04.html"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://ru.vahaah.guru/rss.xml" title="Yet another blog" /><script>
+if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1")) {
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-131173493-1', 'auto');
+  ga('send', 'pageview');
+}
+</script>
+<link rel="amphtml" href="https://ru.vahaah.guru/2013/06/10/ustanovka-gitlab-i-redmine-na-ubuntu-12-04.amp.html" />
+  
+  <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Yet another blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger">
+          <a class="page-link" href="/about/">Обо мне</a>
+        </div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Установка GitLab и Redmine на Ubuntu 12.04</h1>
+    <div class="post-meta">
+      <ul class="subline">
+        <li>
+          <time class="dt-published" datetime="2013-06-10T12:16:00+04:00" itemprop="datePublished">10.06.2013
+          </time>
+        </li><li>177 слов</li>
+      <li>
+      
+          
+            минута
+          
+          для прочтения
+       </li>
+      </ul>
+    </div>
+    <p class="unprintable"><a href='/tag/dev.html' class='tag notranslate'>dev</a> <a href='/tag/ubuntu.html' class='tag notranslate'>ubuntu</a></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>Для начала скажу пару слов о том что есть что. GitLab, на мой взгляд, это лучшая веб обертка над git, и если быть совсем кратким это свой личный GitHub. Redmine это отличный менеджер проектов. Как мне кажется это две очень необходимые вещи для любого разработчика
+<!--more-->
+Для начала необходимо установить все нужные пакеты:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">apt-get update
+apt-get upgrade
+apt-get install <span class="nt">-y</span> build-essential zlib1g-dev libyaml-dev libssl-dev <span class="se">\</span>
+libgdbm-dev libreadline-dev libncurses5-dev libffi-dev curl git-core <span class="se">\</span>
+openssh-server redis-server checkinstall libxml2-dev libxslt-dev <span class="se">\</span>
+libcurl4-openssl-dev libicu-dev postfix python nginx <span class="se">\</span>
+imagemagick  libmagickcore-dev libmagickwand-dev <span class="se">\</span>
+mysql-server mysql-client libmysqlclient-dev</code></pre></figure>
+
+<p>Теперь нам нужно удалить старую версию ruby и установить то что нужно нам для работы</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">apt-get remove ruby1.8</code></pre></figure>
+
+<p>и ставим новый ruby</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">mkdir /tmp/ruby <span class="o">&amp;&amp;</span> <span class="nb">cd</span> /tmp/ruby
+curl <span class="nt">--progress</span> http://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.3-p429.tar.gz | <span class="nb">tar </span>xz
+<span class="nb">cd </span>ruby-1.9.3-p429
+./configure
+make
+make install
+gem install bundler <span class="nt">--no-ri</span> <span class="nt">--no-rdoc</span></code></pre></figure>
+
+<h3 id="Установка-gitlab">Установка GitLab</h3>
+
+<p>для начала нужно создать нового пользователя для GitLab</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">adduser <span class="nt">--disabled-login</span> <span class="nt">--gecos</span> <span class="s1">'GitLab'</span> git</code></pre></figure>
+
+<p>меняем пользователя и переходим в домашнюю директорию:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">sudo </span>su git
+<span class="nb">cd</span> /home/git</code></pre></figure>
+
+<p>Устанавливаем gitlab-shell</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">git clone https://github.com/gitlabhq/gitlab-shell.git
+<span class="nb">cd </span>gitlab-shell/
+git checkout <span class="nt">-b</span> v1.5.0 v1.5.0
+cp config.yml<span class="o">{</span>.example,<span class="o">}</span>
+vim config.yml <span class="c"># проверяем конфигурацию</span>
+./bin/install
+<span class="nb">cd</span> ../</code></pre></figure>
+
+<p>Устанавливаем GitLab</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">cd</span> /home/git
+git clone https://github.com/gitlabhq/gitlabhq.git gitlab
+<span class="nb">cd</span> /home/git/gitlab
+git checkout <span class="nt">-b</span> v5.2.1 v5.2.1
+cp config/gitlab.yml<span class="o">{</span>.example,<span class="o">}</span>
+vim config/gitlab.yml <span class="c"># проверяем конфигурацию</span>
+chown <span class="nt">-R</span> git log/
+chown <span class="nt">-R</span> git tmp/
+mkdir tmp/pids/
+mkdir tmp/sockets/
+mkdir public/uploads
+chmod <span class="nt">-R</span> u+rwX  log/
+chmod <span class="nt">-R</span> u+rwX  tmp/
+chmod <span class="nt">-R</span> u+rwX  public/uploads
+cp config/puma.rb<span class="o">{</span>.example,<span class="o">}</span>
+git config <span class="nt">--global</span> user.name <span class="s2">"GitLab"</span>
+git config <span class="nt">--global</span> user.email <span class="s2">"gitlab@example.com"</span></code></pre></figure>
+
+<p>Создаем и настраиваем базу данных</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">cp config/database.yml<span class="o">{</span>.mysql,<span class="o">}</span>
+mysql <span class="nt">-u</span> root <span class="nt">-p</span>
+
+mysql&gt; CREATE USER <span class="s1">'gitlab'</span>@<span class="s1">'localhost'</span> IDENTIFIED BY <span class="s1">'$password'</span><span class="p">;</span>
+mysql&gt; CREATE DATABASE IF NOT EXISTS &amp;#96<span class="p">;</span>gitlabhq_production&amp;#96<span class="p">;</span> DEFAULT CHARACTER SET &amp;#96<span class="p">;</span>utf8&amp;#96<span class="p">;</span> COLLATE &amp;#96<span class="p">;</span>utf8_unicode_ci&amp;#96<span class="p">;;</span>
+mysql&gt; GRANT SELECT, LOCK TABLES, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER ON &amp;#96<span class="p">;</span>gitlabhq_production&amp;#96<span class="p">;</span>.<span class="k">*</span> TO <span class="s1">'gitlab'</span>@<span class="s1">'localhost'</span><span class="p">;</span>
+mysql&gt; <span class="nb">exit</span><span class="p">;</span>
+
+vim config/database.yml</code></pre></figure>
+
+<p>И теперь проводим саму установку</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">gem install charlock_holmes <span class="nt">--version</span> <span class="s1">'0.6.9.4'</span> <span class="nt">--no-ri</span> <span class="nt">--no-rdoc</span>
+bundle install <span class="nt">--deployment</span> <span class="nt">--without</span> development <span class="nb">test </span>postgres
+bundle <span class="nb">exec </span>rake gitlab:setup <span class="nv">RAILS_ENV</span><span class="o">=</span>production
+bundle <span class="nb">exec </span>rake gitlab:env:info <span class="nv">RAILS_ENV</span><span class="o">=</span>production
+bundle <span class="nb">exec </span>rake sidekiq:start <span class="nv">RAILS_ENV</span><span class="o">=</span>production</code></pre></figure>
+
+<p>Добавляем запуск службы в init.d</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">su
+cp lib/support/init.d/gitlab /etc/init.d/gitlab
+chmod +x /etc/init.d/gitlab
+update-rc.d gitlab defaults 21</code></pre></figure>
+
+<p>Поздравляю, мы только что установили GitLab</p>
+
+<h3 id="redmine">Redmine</h3>
+
+<p>Для начала необходимо создать директорию и скачать само приложение</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">mkdir <span class="nt">-m</span> 755 /home/project
+<span class="nb">cd</span> /home/project
+git clone https://github.com/redmine/redmine.git
+<span class="nb">cd </span>redmine</code></pre></figure>
+
+<p>Конфигурируем базу данных:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">cp config/database.yml<span class="o">{</span>.example,<span class="o">}</span>
+mysql <span class="nt">-u</span> root <span class="nt">-p</span>
+
+mysql&gt; CREATE USER <span class="s1">'redmine'</span>@<span class="s1">'localhost'</span> IDENTIFIED BY <span class="s1">'$password'</span><span class="p">;</span>
+mysql&gt; CREATE DATABASE IF NOT EXISTS &amp;#96<span class="p">;</span>redmine&amp;#96<span class="p">;</span> DEFAULT CHARACTER SET &amp;#96<span class="p">;</span>utf8&amp;#96<span class="p">;</span> COLLATE &amp;#96<span class="p">;</span>utf8_unicode_ci&amp;#96<span class="p">;;</span>
+mysql&gt; GRANT SELECT, LOCK TABLES, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER ON &amp;#96<span class="p">;</span>redmine&amp;#96<span class="p">;</span>.<span class="k">*</span> TO <span class="s1">'redmine'</span>@<span class="s1">'localhost'</span><span class="p">;</span>
+mysql&gt; <span class="nb">exit</span><span class="p">;</span>
+
+vim config/database.yml <span class="c"># вносим информацию о бд</span></code></pre></figure>
+
+<p>Для запуска redmine нам необходимо скопировать файл puma.rb из GitLab</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">cp /home/git/gitlab/config/puma.rb config/puma.rb
+vim config/puma.rb <span class="c"># изменить все gitlab на redmine, и откоректировать пути</span>
+vim Gemfile <span class="c"># нужно добавить строку " gem "puma", '~&gt; 2.0.1' "</span>
+cp <span class="nt">-pR</span> config/configuration.yml<span class="o">{</span>.example,<span class="o">}</span>
+vim config/configuration.yml <span class="c"># основная конфигурация</span>
+
+bundle install <span class="nt">--without</span> development <span class="nb">test </span>postgresql sqlite
+rake generate_secret_token</code></pre></figure>
+
+<p>И последние шаги:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">RAILS_ENV</span><span class="o">=</span>production rake db:migrate
+<span class="nv">RAILS_ENV</span><span class="o">=</span>production rake redmine:load_default_data
+mkdir tmp public/plugin_assets
+chown <span class="nt">-R</span> www-data:www-data /home/project
+chmod <span class="nt">-R</span> 755 files log tmp public/plugin_assets</code></pre></figure>
+
+<p>Теперь нам нужно создать файл /etc/init.d/redmine и добавить в него следующее содержимое <a href="https://gist.github.com/vahaah/6146231">Gist</a></p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">vim /etc/init.d/redmine
+chmod +x /etc/init.d/redmine
+update-rc.d redmine defaults 21</code></pre></figure>
+
+<h3 id="nginx">NGINX</h3>
+
+<p>Конфигурация nginx для gitlab</p>
+
+<figure class="highlight"><pre><code class="language-nginx" data-lang="nginx"><span class="k">vim</span> <span class="n">/etc/nginx/sites-available/gitlab</span>
+
+
+<span class="s">upstream</span> <span class="s">gitlab</span> <span class="p">{</span>
+  <span class="kn">server</span> <span class="s">unix:/home/git/gitlab/tmp/sockets/gitlab.socket</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">server</span> <span class="p">{</span>
+  <span class="kn">listen</span> <span class="mi">80</span><span class="p">;</span>         
+  <span class="kn">server_name</span> <span class="s">git.smidth.ru</span><span class="p">;</span>
+  <span class="kn">server_tokens</span> <span class="no">off</span><span class="p">;</span>
+  <span class="kn">root</span> <span class="n">/home/git/gitlab/public</span><span class="p">;</span>
+
+  <span class="kn">access_log</span>  <span class="n">/var/log/nginx/gitlab_access.log</span><span class="p">;</span>
+  <span class="kn">error_log</span>   <span class="n">/var/log/nginx/gitlab_error.log</span><span class="p">;</span>
+
+  <span class="kn">location</span> <span class="n">/</span> <span class="p">{</span>
+    <span class="kn">try_files</span> <span class="nv">$uri</span> <span class="nv">$uri</span><span class="n">/index.html</span> <span class="nv">$uri</span><span class="s">.html</span> <span class="s">@gitlab</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kn">location</span> <span class="s">@gitlab</span> <span class="p">{</span>
+    <span class="kn">proxy_read_timeout</span> <span class="mi">300</span><span class="p">;</span>
+    <span class="kn">proxy_connect_timeout</span> <span class="mi">300</span><span class="p">;</span>
+    <span class="kn">proxy_redirect</span>     <span class="no">off</span><span class="p">;</span>
+
+    <span class="kn">proxy_set_header</span>   <span class="s">X-Forwarded-Proto</span> <span class="nv">$scheme</span><span class="p">;</span>
+    <span class="kn">proxy_set_header</span>   <span class="s">Host</span>              <span class="nv">$http_host</span><span class="p">;</span>
+    <span class="kn">proxy_set_header</span>   <span class="s">X-Real-IP</span>         <span class="nv">$remote_addr</span><span class="p">;</span>
+
+    <span class="kn">proxy_pass</span> <span class="s">http://gitlab</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>и конфигурация для redmine</p>
+
+<figure class="highlight"><pre><code class="language-nginx" data-lang="nginx"><span class="k">vim</span> <span class="n">/etc/nginx/sites-available/redmine</span>
+
+
+<span class="s">upstream</span> <span class="s">redmine</span> <span class="p">{</span>
+  <span class="kn">server</span> <span class="s">unix:/home/project/redmine/tmp/sockets/redmine.socket</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">server</span> <span class="p">{</span>
+  <span class="kn">listen</span> <span class="mi">80</span><span class="p">;</span>         
+  <span class="kn">server_name</span> <span class="s">redmine.smidth.ru</span><span class="p">;</span>
+  <span class="kn">server_tokens</span> <span class="no">off</span><span class="p">;</span>
+  <span class="kn">root</span> <span class="n">/home/project/redmine/public</span><span class="p">;</span>
+
+  <span class="kn">access_log</span>  <span class="n">/var/log/nginx/redmine_access.log</span><span class="p">;</span>
+  <span class="kn">error_log</span>   <span class="n">/var/log/nginx/redmine_error.log</span><span class="p">;</span>
+
+  <span class="kn">location</span> <span class="n">/</span> <span class="p">{</span>
+    <span class="kn">try_files</span> <span class="nv">$uri</span> <span class="nv">$uri</span><span class="n">/index.html</span> <span class="nv">$uri</span><span class="s">.html</span> <span class="s">@redmine</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kn">location</span> <span class="s">@redmine</span> <span class="p">{</span>
+    <span class="kn">proxy_read_timeout</span> <span class="mi">300</span><span class="p">;</span>
+    <span class="kn">proxy_connect_timeout</span> <span class="mi">300</span><span class="p">;</span>
+    <span class="kn">proxy_redirect</span>     <span class="no">off</span><span class="p">;</span>
+
+    <span class="kn">proxy_set_header</span>   <span class="s">X-Forwarded-Proto</span> <span class="nv">$scheme</span><span class="p">;</span>
+    <span class="kn">proxy_set_header</span>   <span class="s">Host</span>              <span class="nv">$http_host</span><span class="p">;</span>
+    <span class="kn">proxy_set_header</span>   <span class="s">X-Real-IP</span>         <span class="nv">$remote_addr</span><span class="p">;</span>
+
+    <span class="kn">proxy_pass</span> <span class="s">http://redmine</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>После этого все что нам остается это перезапустить все службы</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">service gitlab restart
+service redmine restart
+service nginx restart</code></pre></figure>
+
+
+  </div><a class="u-url" href="/2013/06/10/ustanovka-gitlab-i-redmine-na-ubuntu-12-04.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Yet another blog</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">vahaah</li><li><a class="u-email" href="mailto:alex.vakhitov@gmail.com">alex.vakhitov@gmail.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/vahaah"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">vahaah</span></a></li><li><a href="https://instagram.com/vahaah"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#instagram"></use></svg> <span class="username">vahaah</span></a></li><li><a href="https://www.twitter.com/vahaah"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">vahaah</span></a></li><li><a href="/rss.xml"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#rss"></use></svg> <span>RSS Feed</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Очередной блог о разработке и всем что с ней связанно</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer><!-- Yandex.Metrika counter -->
+<script type="text/javascript" >
+   (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+   m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+   (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+   ym(51639719, "init", {
+        id:51639719,
+        clickmap:true,
+        trackLinks:true,
+        accurateTrackBounce:true
+   });
+</script>
+<!-- /Yandex.Metrika counter -->
+</body>
+
+</html>
