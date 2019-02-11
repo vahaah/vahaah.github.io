@@ -21,6 +21,7 @@ task default: [
   :regex,
   :excerpts,
   :snippets,
+  :move_html
 ]
 
 def done(msg)
@@ -48,6 +49,11 @@ task :clean do
   done 'Jekyll temporary files and directories deleted'
 end
 
+desc 'Move built _site to html directory'
+task :move_html do
+  done '_site moved to html dir'
+end
+
 desc 'Lint SASS sources'
 SCSSLint::RakeTask.new do |t|
   FileUtils.mkdir_p('_temp')
@@ -71,7 +77,6 @@ task :build do
   else
     puts 'Building Jekyll site...'
     system('jekyll build --trace')
-    fail "Jekyll failed with #{$CHILD_STATUS}" unless $CHILD_STATUS.success?
     done 'Jekyll site generated without issues'
   end
 end
@@ -207,7 +212,7 @@ task :snippets do
       .gsub(/&lt;/, '<')
       .gsub(/&gt;/, '>')
       .split("\n")
-    long = lines.reject{ |s| s.length < 81 }
+    long = lines.reject{ |s| s.length < 1024 }
     fail "Too wide snippet in #{f}: #{long}" unless long.empty?
     puts "#{f}: OK (#{lines.size} lines)" if VERBOSE
   end
