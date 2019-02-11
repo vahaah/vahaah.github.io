@@ -4,10 +4,12 @@ attrs
 authenticator
 centos
 compose
+concepts
 conf
 debian
 detail
 django
+django-storages
 docker
 docker-compose
 docker-gen
@@ -37,13 +39,17 @@ master
 medium
 monster
 nginx
+of
 paas
+proof
 pull
 py
+pypi
 request
 RPLAN
 server
 settings
+SFTP
 small
 spb
 SSH
@@ -52,5 +58,5 @@ TOKEN
 type
 ubuntu
 volumes
-vscale
+VSCALE
 yml

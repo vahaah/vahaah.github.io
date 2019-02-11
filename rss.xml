@@ -1,4 +1,32 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ru"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://ru.vahaah.guru/rss.xml" rel="self" type="application/atom+xml" /><link href="https://ru.vahaah.guru/" rel="alternate" type="text/html" hreflang="ru" /><updated>2019-02-11T15:55:08+03:00</updated><id>https://ru.vahaah.guru/rss.xml</id><title type="html">Yet another blog</title><subtitle>Очередной блог о разработке и всем что с ней связанно</subtitle><author><name>vahaah</name></author><entry><title type="html">Использование docker-gen и nginx-proxy для своего docker хостинга</title><link href="https://ru.vahaah.guru/2016/07/19/ispolzovaniie-docker-gen-i-nginx-proxy-dlia-svoiegho-docker-khostingha.html" rel="alternate" type="text/html" title="Использование docker-gen и nginx-proxy для своего docker хостинга" /><published>2016-07-19T09:22:38+03:00</published><updated>2016-07-19T09:22:38+03:00</updated><id>https://ru.vahaah.guru/2016/07/19/ispolzovaniie-docker-gen-i-nginx-proxy-dlia-svoiegho-docker-khostingha</id><content type="html" xml:base="https://ru.vahaah.guru/2016/07/19/ispolzovaniie-docker-gen-i-nginx-proxy-dlia-svoiegho-docker-khostingha.html">&lt;p&gt;Для докера есть потрясающий пакет под названием &lt;a href=&quot;https://github.com/jwilder/docker-gen&quot;&gt;docker-gen&lt;/a&gt; он позволяет получать мета информацию о запущенных контейнерах, сигналы старта/завершения контейнера и еще много приятных мелочей. В этой статье я хочу описать создание простого paas на основе docker-gen. Наш сервис сможет создавать конфиг nginx для всех запущенных проектов в конечном результате у нас будет свой маленький heroku и мы загружать несколько разных проектов на один сервер с помощью docker-machine.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ru"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://ru.vahaah.guru/rss.xml" rel="self" type="application/atom+xml" /><link href="https://ru.vahaah.guru/" rel="alternate" type="text/html" hreflang="ru" /><updated>2019-02-11T15:55:47+03:00</updated><id>https://ru.vahaah.guru/rss.xml</id><title type="html">Yet another blog</title><subtitle>Очередной блог о разработке и всем что с ней связанно</subtitle><author><name>vahaah</name></author><entry><title type="html">SFTP сервер с помощью Django</title><link href="https://ru.vahaah.guru/2019/02/11/django-sftp.html" rel="alternate" type="text/html" title="SFTP сервер с помощью Django" /><published>2019-02-11T15:22:38+03:00</published><updated>2019-02-11T15:22:38+03:00</updated><id>https://ru.vahaah.guru/2019/02/11/django-sftp</id><content type="html" xml:base="https://ru.vahaah.guru/2019/02/11/django-sftp.html">&lt;p&gt;Не спрашивайте зачем, но я занялся созданием &lt;a href=&quot;https://github.com/vahaah/django-sftp&quot;&gt;рабочего SFTP сервера для Django&lt;/a&gt;. Он позволяет работать с django-storages и использовать S3.&lt;/p&gt;
+
+&lt;p&gt;На данный момент это альфа версия, вернее даже proof of concepts. Но в ближайшее время все докручу&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;p&gt;Сейчас все очень просто, ставится из PyPi:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;pip install django-sftp&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Добавляем в &lt;code class=&quot;highlighter-rouge&quot;&gt;INSTALLED_APPS&lt;/code&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;n&quot;&gt;INSTALLED_APPS&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;'django_sftp'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Проводим миграции:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;./manage.py migrate django_sftp&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Генерируем ключ:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;ssh-keygen &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; rsa &lt;span class=&quot;nt&quot;&gt;-b&lt;/span&gt; 4096 &lt;span class=&quot;nt&quot;&gt;-C&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;your_email@example.com&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-m&lt;/span&gt; PEM&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;И запускаем на нужном порте:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;./manage.py sftpserver :11121 &lt;span class=&quot;nt&quot;&gt;-k&lt;/span&gt; /tmp/rsa&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;</content><author><name>vahaah</name></author><category term="django" /><category term="sftp" /><summary type="html">Не спрашивайте зачем, но я занялся созданием рабочего SFTP сервера для Django. Он позволяет работать с django-storages и использовать S3. На данный момент это альфа версия, вернее даже proof of concepts. Но в ближайшее время все докручу</summary></entry><entry><title type="html">Использование docker-gen и nginx-proxy для своего docker хостинга</title><link href="https://ru.vahaah.guru/2016/07/19/ispolzovaniie-docker-gen-i-nginx-proxy-dlia-svoiegho-docker-khostingha.html" rel="alternate" type="text/html" title="Использование docker-gen и nginx-proxy для своего docker хостинга" /><published>2016-07-19T09:22:38+03:00</published><updated>2016-07-19T09:22:38+03:00</updated><id>https://ru.vahaah.guru/2016/07/19/ispolzovaniie-docker-gen-i-nginx-proxy-dlia-svoiegho-docker-khostingha</id><content type="html" xml:base="https://ru.vahaah.guru/2016/07/19/ispolzovaniie-docker-gen-i-nginx-proxy-dlia-svoiegho-docker-khostingha.html">&lt;p&gt;Для докера есть потрясающий пакет под названием &lt;a href=&quot;https://github.com/jwilder/docker-gen&quot;&gt;docker-gen&lt;/a&gt; он позволяет получать мета информацию о запущенных контейнерах, сигналы старта/завершения контейнера и еще много приятных мелочей. В этой статье я хочу описать создание простого paas на основе docker-gen. Наш сервис сможет создавать конфиг nginx для всех запущенных проектов в конечном результате у нас будет свой маленький heroku и мы загружать несколько разных проектов на один сервер с помощью docker-machine.&lt;/p&gt;
 
 &lt;!--more--&gt;
 
@@ -657,202 +685,4 @@ chmod +x /usr/local/sbin/le-renew-webroot&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt
 
 &lt;p&gt;А все части шаблона нужно складывать в директорию includes&lt;/p&gt;
 
-&lt;p&gt;Я указал лишь основы, в будущем скорей всего продолжу тему хороших практик при создании django  приложения&lt;/p&gt;</content><author><name>vahaah</name></author><category term="django" /><summary type="html">Недавно наткнулся на статью о лучших практиках разработки на django (ссылка), меня сильно порадовало что большинство из этого я интуитивно использую уже довольно давно, но вот некоторые части мне кажется нужно делать подругому нежели описанны в статье. Сейчас хочу привести вашему вниманию симбеоз статьи указанной выше и моих мыслей. Также советую совместить данную статью с моим постом о структуре django проекта</summary></entry><entry><title type="html">Настройка сервера для Django. Gunicorn + Nginx + Ubuntu</title><link href="https://ru.vahaah.guru/2014/02/28/nastroika-sierviera-dlia-django-gunicorn-nginx-ubuntu.html" rel="alternate" type="text/html" title="Настройка сервера для Django. Gunicorn + Nginx + Ubuntu" /><published>2014-02-28T12:28:00+04:00</published><updated>2014-02-28T12:28:00+04:00</updated><id>https://ru.vahaah.guru/2014/02/28/nastroika-sierviera-dlia-django-gunicorn-nginx-ubuntu</id><content type="html" xml:base="https://ru.vahaah.guru/2014/02/28/nastroika-sierviera-dlia-django-gunicorn-nginx-ubuntu.html">&lt;p&gt;В этой заметке я хочу описать процесс настройки боевого сервера для хостинга Django проектов. И так нам потребуется 30 минут времени и сервер на  Ubuntu 12.*&lt;/p&gt;
-
-&lt;!--more--&gt;
-
-&lt;p&gt;Для начала необходимо создать пользователя и запретить автоизацию из под root&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;adduser django
-adduser django &lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;теперь необходимо зайти на сервер из под &lt;strong&gt;root’а&lt;/strong&gt;&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;nano /etc/ssh/sshd_config&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;и выставляем &lt;code class=&quot;highlighter-rouge&quot;&gt;PermitRootLogin no&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;Перезапускаем ssh&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;service ssh restart&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Теперь нужно перезайти на сервер под пользователем &lt;strong&gt;django&lt;/strong&gt; и с этого момента мы будем использовать команду &lt;strong&gt;sudo&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;Для удобной работой с файловой системой предлагаю поставить &lt;strong&gt;Midnight Commander&lt;/strong&gt;&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt-get install mc
-&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;mc&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Для удобной работы с репозиториями ставим &lt;strong&gt;python-software-properties&lt;/strong&gt;&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt-get install python-software-properties&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Дабавляем репозитории Nginx&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;add-apt-repository ppa:nginx/stable
-&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt-get update&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Ставим необходимые пакеты&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt-get install nginx mysql-server mysql-client libmysqlclient-dev python-mysqldb python-pip python-virtualenv supervisor git-core redis-server gunicorn make g++ python-dev&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Можно еще установить &lt;strong&gt;postfix&lt;/strong&gt; для отправки email, но я чаще пользуюсь smtp&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt-get install postfix&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;Структура-проектов&quot;&gt;Структура проектов&lt;/h3&gt;
-
-&lt;p&gt;Для структуризации файлов в проекте мы будем пользоваться вот этой моей &lt;a href=&quot;//2013/09/01/django_structure.html&quot;&gt;заметкой&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;А по поводу хранения самих проектов могу сказать следующее, в домашней папке создадим 3 директории&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ~/
-mkdir projects &lt;span class=&quot;c&quot;&gt;#папка с проектами&lt;/span&gt;
-mkdir logs &lt;span class=&quot;c&quot;&gt;#папка с логами&lt;/span&gt;
-mkdir .envs &lt;span class=&quot;c&quot;&gt;#папка с виртуальными окружениями&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;Виртуальные-окружения&quot;&gt;Виртуальные окружения&lt;/h3&gt;
-&lt;p&gt;Теперь давайте подготовим виртуальные окружения для старта, как я писал в заметке о структуре проектов мы будем называть окружение также как называется проект в нашем случае это &lt;strong&gt;prjct&lt;/strong&gt;&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ~/
-virtualenv —prompt&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;prjct&quot;&lt;/span&gt; .envs/prjct&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;И теперь мы можем использовать наше виртуальное окружение для проекта&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt; ~/.envs/prjct/bin/activate&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;Создание-БД-в-mysql&quot;&gt;Создание БД в MySQL&lt;/h3&gt;
-
-&lt;p&gt;Заходим в &lt;strong&gt;mysql под пользователем root&lt;/strong&gt; и с паролем который мы указали когда ставили пакет&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-mysql&quot; data-lang=&quot;mysql&quot;&gt;mysql -u root -p PASSWORD
-#создаем БД
-prjctmysql&amp;gt; CREATE DATABASE IF NOT EXISTS &amp;amp;#96;prjct&amp;amp;#96; DEFAULT CHARACTER SET &amp;amp;#96;utf8&amp;amp;#96; COLLATE &amp;amp;#96;utf8_unicode_ci&amp;amp;#96;;
-#создаем пользователя prjct
-mysql&amp;gt; CREATE USER 'prjct'@'localhost' IDENTIFIED BY '$password’; # укажите пароль вместо $password
-#Даем пользователю права на БД
-mysql&amp;gt; GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER ON &amp;amp;#96;prjct&amp;amp;#96;.* TO 'prjct'@'localhost’;
-mysql&amp;gt; exit;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Теперь вносим эти настройки в свой &lt;strong&gt;settings.py&lt;/strong&gt; &lt;em&gt;(лучше конечно настройки БД вынести в отдельный файл settings_local.py, чтобы было проще при разработке)&lt;/em&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;Перенос-проекта&quot;&gt;Перенос проекта&lt;/h3&gt;
-
-&lt;p&gt;Теперь копируем проект в директорию &lt;strong&gt;~/projects/prjct/&lt;/strong&gt;. Вы можете перенести файлы использую sftp или же скопировать из своего репозитория, если вы используете git. После того как вы скопировали все файлы проекта, нужно выполнить установку всех зависимостей &lt;em&gt;(они должны быть записаны в файле requirements.txt)&lt;/em&gt;&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;pip install &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; requirements.txt&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Дальше проверим все ли работает и выполним все служебные команды&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;python manage.py validate &lt;span class=&quot;c&quot;&gt;#если все хорошо продолжаем&lt;/span&gt;
-python manage.py syncdb
-python manage.py migrate
-python manage.py collectstatic —noinput&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Теперь нужно создать директорию в которой мы будем хранить все логи проекта:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;mkdir ~/logs/prjct&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;Настройка-supervisor-и-gunicorn&quot;&gt;Настройка supervisor и gunicorn&lt;/h3&gt;
-
-&lt;p&gt;Теперь установим настройки нашего проекта в &lt;strong&gt;supervisor&lt;/strong&gt;. В директории с проетом у нас должна быть создана директория &lt;strong&gt;conf&lt;/strong&gt; и в ней директория &lt;strong&gt;supervisor&lt;/strong&gt; в которой лежит файл &lt;strong&gt;prjct.conf&lt;/strong&gt;. Я всегда храню их в директории с проектом, чтобы их содержимое можно было контолировать и при переносе с сервера на сервер просто копировать.&lt;/p&gt;
-
-&lt;p&gt;Содержимое файла&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;program:prjct]
-
-&lt;span class=&quot;nb&quot;&gt;command&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;sh /home/django/projects/prjct/run/run.sh
-&lt;span class=&quot;nv&quot;&gt;directory&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/home/django/projects/prjct
-&lt;span class=&quot;nv&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;django
-&lt;span class=&quot;nv&quot;&gt;autostart&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true
-&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;autorestart&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true
-&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;stderr_logfile&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/home/django/logs/prjct/errors.log
-&lt;span class=&quot;nv&quot;&gt;stdout_logfile&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/home/django/logs/prjct/access.log&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Теперь отдаем файл настроек supervisor’у&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ~/projects/prjct/conf/supervisor
-&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;ln prjct.conf /etc/supervisor/conf.d/prjct.conf
-&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;supervisorctl update
-&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;supervisorctl status&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;После последней команды мы должны увидеть наш проект в списке и то что он не работает. А не работает он потому что у нас нет файла для запуска gunicorn &lt;strong&gt;/home/django/projects/prjct/run/run.sh&lt;/strong&gt;, собственно его нужно создать и его содержимое будет таково:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/sh&lt;/span&gt;
-
-&lt;span class=&quot;nv&quot;&gt;NAME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;prjc
-&lt;span class=&quot;nv&quot;&gt;SRCDIR&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;prjc
-
-&lt;span class=&quot;nv&quot;&gt;GUNICORN&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/usr/bin/gunicorn_django
-&lt;span class=&quot;nv&quot;&gt;HOMEDIR&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/home/django
-
-&lt;span class=&quot;nv&quot;&gt;VIRTUALENV&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HOMEDIR&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;/.virtualenvs/&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;NAME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;PROJECTDIR&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HOMEDIR&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;/projects/&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;NAME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;SOCKFILE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/tmp/&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;NAME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;.sock
-&lt;span class=&quot;nv&quot;&gt;MANAGE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PROJECTDIR&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;/manage.py
-
-&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;VIRTUALENV&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;/bin/activate
-python &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;MANAGE&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt; run_gunicorn &lt;span class=&quot;nt&quot;&gt;--bind&lt;/span&gt; unix:&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;SOCKFILE&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Теперь перезапускаем наше приложение и смотрим статус:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;supervisorctl restart prjct
-&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;supervisorctl status&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Поидее все должно работать (:&lt;/p&gt;
-
-&lt;h3 id=&quot;Настройка-nginx&quot;&gt;Настройка NGINX&lt;/h3&gt;
-
-&lt;p&gt;В директории conf у нас должна быть директория nginx где мы будем хранить конфигурационный файл для nginx. Собственно вот создержимое файла &lt;strong&gt;~/projects/prjct/conf/nginx/prjct.conf&lt;/strong&gt;:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-nginx&quot; data-lang=&quot;nginx&quot;&gt;&lt;span class=&quot;k&quot;&gt;upstream&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;prjct_server&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-
-&lt;span class=&quot;kn&quot;&gt;server&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;unix:/tmp/prjct.sock&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;fail_timeout=0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;server&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kn&quot;&gt;listen&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;80&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;kn&quot;&gt;server_name&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;prjct_domain&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;kn&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$http_host&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;www.prjct_domain)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;kn&quot;&gt;rewrite&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;(.*)&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;http://prjct_domain&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;permanent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-
-&lt;span class=&quot;kn&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;client_max_body_size&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;20m&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;kn&quot;&gt;proxy_set_header&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;X-Forwarded-For&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$proxy_add_x_forwarded_for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;proxy_set_header&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Host&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$http_host&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;proxy_redirect&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;off&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;proxy_pass&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;http://prjct_server&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;autoindex&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-
-&lt;span class=&quot;kn&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;/media&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;root&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;/home/django/projects/prjct&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;autoindex&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;off&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;expires&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;access_log&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;off&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;kn&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;/static&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;root&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;/home/django/projects/prjct&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;autoindex&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;off&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;expires&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;access_log&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;off&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;kn&quot;&gt;access_log&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;/var/log/nginx/prjct.access.log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;error_log&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;/var/log/nginx/prjct.error.log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Этот файл необходимо скопировать к конфигам nginx&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ~/projects/prjct/conf/nginx
-&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;ln prjct.conf /etc/nginx/sites-enabled/prjct.conf&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;И последнее что осталось это перезапустить nginx&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;service nginx restart&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;И теперь все должно работать&lt;/p&gt;</content><author><name>vahaah</name></author><category term="ubuntu" /><category term="django" /><category term="nginx" /><summary type="html">В этой заметке я хочу описать процесс настройки боевого сервера для хостинга Django проектов. И так нам потребуется 30 минут времени и сервер на Ubuntu 12.*</summary></entry></feed>
+&lt;p&gt;Я указал лишь основы, в будущем скорей всего продолжу тему хороших практик при создании django  приложения&lt;/p&gt;</content><author><name>vahaah</name></author><category term="django" /><summary type="html">Недавно наткнулся на статью о лучших практиках разработки на django (ссылка), меня сильно порадовало что большинство из этого я интуитивно использую уже довольно давно, но вот некоторые части мне кажется нужно делать подругому нежели описанны в статье. Сейчас хочу привести вашему вниманию симбеоз статьи указанной выше и моих мыслей. Также советую совместить данную статью с моим постом о структуре django проекта</summary></entry></feed>
