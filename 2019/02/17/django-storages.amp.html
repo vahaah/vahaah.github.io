@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html amp lang="en">
+  <head>
+
+    <meta charset="utf-8">
+    <title>Использование django storages в своем приложении</title>
+    <link rel="canonical" href="https://ru.vahaah.guru//2019/02/17/django-storages.html">
+    <link rel="icon" type="image/png" href="/favicon.ico">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+    <script type="application/ld+json">
+      {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "mainEntityOfPage":{
+          "@type": "WebPage",
+          "@id": "https://ru.vahaah.guru//2019/02/17/django-storages.html"
+        },
+        "headline": "Использование django storages в своем приложении",
+        "image": {
+          "@type": "ImageObject",
+          "url": "https://www.yegor256.com/images/face-1200x1200.jpg",
+          "height": 1400,
+          "width": 1400
+        },
+        "datePublished": "2019-02-17 15:00:38",
+        "dateModified": "2019-02-17 15:00:38",
+        "author": {
+          "@type": "Person",
+          "name": "Yegor Bugayenko"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "ru.vahaah.guru",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://ru.vahaah.guru/images/face-512x512.jpg",
+            "width": 512,
+            "height": 512
+          }
+        },
+        "description": "",
+        "keywords": [""]
+      }
+    </script>
+    <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style>
+<noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,500">
+    <style amp-custom="amp-custom">
+
+      body { font-family: serif; padding: .5em; font-size: 1.2em; }
+      article { width: 600px; max-width: 100%; margin-left: auto; margin-right: auto; }
+      pre, code { font-family: 'Source Code Pro', 'Courier New', monospace; font-size: .8em; }
+      code { padding: 0 .3em; background-color: lightgray; }
+      a, a:hover, a:visited { color: inherit; }
+      .intro { color: red; font-size: .75em; }
+      .photo { border-radius: 50%; }
+      pre { overflow-x:scroll; }
+    </style>
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
+  </head>
+  <body>
+    <article>
+      <p class="intro">
+        This is a mobile version, full one is
+        <a href="https://ru.vahaah.guru//2019/02/17/django-storages.html">here</a>.
+      </p>
+      <p>
+        <amp-img src="/images/face-256x256.jpg" width="80" height="80" alt="" class="photo"></amp-img>
+      </p>
+      <p><br>17 February 2019</p>
+      <h1>Использование django storages в своем приложении</h1>
+      <p>Мне нужно было обеспечить поддежку, совместимость и быстрое добавление новых типов файлового хранилища для <a href="https://github.com/vahaah/django-sftp">django-sftp</a>. Опять же решение взял у <a href="https://github.com/tokibito/django-ftpserver">django-ftpserver</a></p>
+
+
+
+<p>Начнем из далека у django есть встроеная функция для определения типа файлогово хранилища которое указано в setting.py</p>
+
+<pre>&gt;&gt;&gt; from django.core.files.storage import get_storage_class
+&gt;&gt;&gt; get_storage_class()
+&lt;class django.core.files.storage.FileSystemStorage&gt;</pre>
+
+<p>С именем хранилища которое мы используем в системе мы можем написать небольшой класс который может сделать патч основного класса нашей фаловой системы.</p>
+
+<pre>class StoragePatch:
+    patch_methods = []
+    
+    @classmethod
+    def apply(cls, fs):
+        """replace bound methods of fs.
+        """
+        fs._patch = cls
+        for method_name in cls.patch_methods:
+            # if fs hasn't method, raise AttributeError.
+            origin = getattr(fs, method_name)
+            method = getattr(cls, method_name)
+            bound_method = method.__get__(fs, fs.__class__)
+            setattr(fs, method_name, bound_method)
+            setattr(fs, '_origin_' + method_name, origin)</pre>
+
+<p>Остновная идея в том чтобы не перегружать все методы, а только те которые указаны в <code class="highlighter-rouge">patch_methods</code> и сохранить исходный метод с пометкой <code class="highlighter-rouge">'_origin_' + method_name</code>.</p>
+
+<p>Пример для Django’s FileSystemStorage</p>
+
+<pre>class FileSystemStoragePatch(StoragePatch):
+    """StoragePatch for Django's FileSystemStorage.
+    """
+    patch_methods = (
+        'mkdir', 'rmdir',
+    )
+    
+    def mkdir(self, path):
+        os.mkdir(self.storage.path(path))
+    
+    def rmdir(self, path):
+        os.rmdir(self.storage.path(path))</pre>
+
+<p>И соответственно в нашем главном классе мы можем сделать вот так:</p>
+
+<pre>class StorageFS(object):
+
+    storage = get_storage_class()
+
+    patches = {
+        'FileSystemStorage': FileSystemStoragePatch,
+        'S3Boto3Storage': S3Boto3StoragePatch
+    }
+    
+    def apply_patch(self):
+        patch = self.patches.get(self.storage.__class__.__name__)
+        if patch:
+            patch.apply(self)</pre>
+
+<p>В общем все просто и работает :)</p>
+
+    </article>
+  </body>
+</html>

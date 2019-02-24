@@ -2,14 +2,17 @@ ACCESS
 ANSI
 attrs
 authenticator
+celery
 centos
 compose
 concepts
 conf
+cookiecutter
 debian
 detail
 django
 django-ftpserver
+django-sftp
 django-storages
 docker
 docker-compose
@@ -24,6 +27,9 @@ FROM
 generic-driver
 git
 google
+happy
+helm
+helming
 heroku
 host
 huge
@@ -49,6 +55,7 @@ pypi
 request
 RPLAN
 server
+setting
 settings
 SFTP
 small

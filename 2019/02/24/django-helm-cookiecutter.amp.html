@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html amp lang="en">
+  <head>
+
+    <meta charset="utf-8">
+    <title>Django Helm Cookiecutter</title>
+    <link rel="canonical" href="https://ru.vahaah.guru//2019/02/24/django-helm-cookiecutter.html">
+    <link rel="icon" type="image/png" href="/favicon.ico">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+    <script type="application/ld+json">
+      {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "mainEntityOfPage":{
+          "@type": "WebPage",
+          "@id": "https://ru.vahaah.guru//2019/02/24/django-helm-cookiecutter.html"
+        },
+        "headline": "Django Helm Cookiecutter",
+        "image": {
+          "@type": "ImageObject",
+          "url": "https://www.yegor256.com/images/face-1200x1200.jpg",
+          "height": 1400,
+          "width": 1400
+        },
+        "datePublished": "2019-02-24 18:22:38",
+        "dateModified": "2019-02-24 18:22:38",
+        "author": {
+          "@type": "Person",
+          "name": "Yegor Bugayenko"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "ru.vahaah.guru",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://ru.vahaah.guru/images/face-512x512.jpg",
+            "width": 512,
+            "height": 512
+          }
+        },
+        "description": "",
+        "keywords": [""]
+      }
+    </script>
+    <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style>
+<noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,500">
+    <style amp-custom="amp-custom">
+
+      body { font-family: serif; padding: .5em; font-size: 1.2em; }
+      article { width: 600px; max-width: 100%; margin-left: auto; margin-right: auto; }
+      pre, code { font-family: 'Source Code Pro', 'Courier New', monospace; font-size: .8em; }
+      code { padding: 0 .3em; background-color: lightgray; }
+      a, a:hover, a:visited { color: inherit; }
+      .intro { color: red; font-size: .75em; }
+      .photo { border-radius: 50%; }
+      pre { overflow-x:scroll; }
+    </style>
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
+  </head>
+  <body>
+    <article>
+      <p class="intro">
+        This is a mobile version, full one is
+        <a href="https://ru.vahaah.guru//2019/02/24/django-helm-cookiecutter.html">here</a>.
+      </p>
+      <p>
+        <amp-img src="/images/face-256x256.jpg" width="80" height="80" alt="" class="photo"></amp-img>
+      </p>
+      <p><br>24 February 2019</p>
+      <h1>Django Helm Cookiecutter</h1>
+      <p>По работе регулярно приходится создавать Helm чарты в том числе и для Django. Меня каждый раз напрягало копирование кода и удаление/создание отдельных конфигов для Celery, настройка бд или выбор существующей и все в таком духе.</p>
+
+<p>Поэтому собрался и начал делать свой шаблон для cookiecutter который будет подерживать все эти настройки.
+</p>
+
+<p>В целом все как всегда для cookiecutter ставим/обновляем до последней версии:</p>
+
+<pre>pip install "cookiecutter&gt;=1.4.0"</pre>
+
+<p>Запускае для нашего шаблона:</p>
+
+<pre>cookiecutter https://github.com/pydanny/django-helm-cookiecutter</pre>
+
+<p>Выбираем конфигурацию:</p>
+
+<pre>chart_name [My Awesome Chart]:
+chart_slug [my_awesome_chart]:
+chart_directory_name [chart]:
+version [0.1.0]:
+image_url [gitlab.example.com/group/project]:
+project_url [https://example.com]:
+DATABASE_URL [postges:///my_awesome_chart]:</pre>
+
+<p>Happy Helming</p>
+
+    </article>
+  </body>
+</html>

@@ -1,4 +1,88 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ru"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://ru.vahaah.guru/rss.xml" rel="self" type="application/atom+xml" /><link href="https://ru.vahaah.guru/" rel="alternate" type="text/html" hreflang="ru" /><updated>2019-02-24T18:31:06+03:00</updated><id>https://ru.vahaah.guru/rss.xml</id><title type="html">Yet another blog</title><subtitle>Очередной блог о разработке и всем что с ней связанно</subtitle><author><name>vahaah</name></author><entry><title type="html">SFTP сервер с помощью Django</title><link href="https://ru.vahaah.guru/2019/02/11/django-sftp.html" rel="alternate" type="text/html" title="SFTP сервер с помощью Django" /><published>2019-02-11T15:22:38+03:00</published><updated>2019-02-11T15:22:38+03:00</updated><id>https://ru.vahaah.guru/2019/02/11/django-sftp</id><content type="html" xml:base="https://ru.vahaah.guru/2019/02/11/django-sftp.html">&lt;p&gt;Не спрашивайте зачем, но я занялся созданием &lt;a href=&quot;https://github.com/vahaah/django-sftp&quot;&gt;рабочего SFTP сервера для Django&lt;/a&gt;. Он позволяет работать с django-storages и использовать S3.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ru"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://ru.vahaah.guru/rss.xml" rel="self" type="application/atom+xml" /><link href="https://ru.vahaah.guru/" rel="alternate" type="text/html" hreflang="ru" /><updated>2019-02-24T18:34:21+03:00</updated><id>https://ru.vahaah.guru/rss.xml</id><title type="html">Yet another blog</title><subtitle>Очередной блог о разработке и всем что с ней связанно</subtitle><author><name>vahaah</name></author><entry><title type="html">Django Helm Cookiecutter</title><link href="https://ru.vahaah.guru/2019/02/24/django-helm-cookiecutter.html" rel="alternate" type="text/html" title="Django Helm Cookiecutter" /><published>2019-02-24T18:22:38+03:00</published><updated>2019-02-24T18:22:38+03:00</updated><id>https://ru.vahaah.guru/2019/02/24/django-helm-cookiecutter</id><content type="html" xml:base="https://ru.vahaah.guru/2019/02/24/django-helm-cookiecutter.html">&lt;p&gt;По работе регулярно приходится создавать Helm чарты в том числе и для Django. Меня каждый раз напрягало копирование кода и удаление/создание отдельных конфигов для Celery, настройка бд или выбор существующей и все в таком духе.&lt;/p&gt;
+
+&lt;p&gt;Поэтому собрался и начал делать свой шаблон для cookiecutter который будет подерживать все эти настройки.
+&lt;!--more--&gt;&lt;/p&gt;
+
+&lt;p&gt;В целом все как всегда для cookiecutter ставим/обновляем до последней версии:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;pip install &lt;span class=&quot;s2&quot;&gt;&quot;cookiecutter&amp;gt;=1.4.0&quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Запускае для нашего шаблона:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;cookiecutter https://github.com/pydanny/django-helm-cookiecutter&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Выбираем конфигурацию:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;chart_name &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;My Awesome Chart]:
+chart_slug &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;my_awesome_chart]:
+chart_directory_name &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;chart]:
+version &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;0.1.0]:
+image_url &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;gitlab.example.com/group/project]:
+project_url &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;https://example.com]:
+DATABASE_URL &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;postges:///my_awesome_chart]:&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Happy Helming&lt;/p&gt;</content><author><name>vahaah</name></author><category term="django" /><category term="cookiecutter" /><category term="k8s" /><category term="helm" /><summary type="html">По работе регулярно приходится создавать Helm чарты в том числе и для Django. Меня каждый раз напрягало копирование кода и удаление/создание отдельных конфигов для Celery, настройка бд или выбор существующей и все в таком духе. Поэтому собрался и начал делать свой шаблон для cookiecutter который будет подерживать все эти настройки.</summary></entry><entry><title type="html">Использование django storages в своем приложении</title><link href="https://ru.vahaah.guru/2019/02/17/django-storages.html" rel="alternate" type="text/html" title="Использование django storages в своем приложении" /><published>2019-02-17T15:00:38+03:00</published><updated>2019-02-17T15:00:38+03:00</updated><id>https://ru.vahaah.guru/2019/02/17/django-storages</id><content type="html" xml:base="https://ru.vahaah.guru/2019/02/17/django-storages.html">&lt;p&gt;Мне нужно было обеспечить поддежку, совместимость и быстрое добавление новых типов файлового хранилища для &lt;a href=&quot;https://github.com/vahaah/django-sftp&quot;&gt;django-sftp&lt;/a&gt;. Опять же решение взял у &lt;a href=&quot;https://github.com/tokibito/django-ftpserver&quot;&gt;django-ftpserver&lt;/a&gt;&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;p&gt;Начнем из далека у django есть встроеная функция для определения типа файлогово хранилища которое указано в setting.py&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;django.core.files.storage&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;get_storage_class&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;get_storage_class&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;django&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;core&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;files&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;storage&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FileSystemStorage&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;С именем хранилища которое мы используем в системе мы можем написать небольшой класс который может сделать патч основного класса нашей фаловой системы.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;StoragePatch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;patch_methods&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+    
+    &lt;span class=&quot;nd&quot;&gt;@classmethod&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;apply&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cls&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;&quot;&quot;&quot;replace bound methods of fs.
+        &quot;&quot;&quot;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;fs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_patch&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cls&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;method_name&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cls&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;patch_methods&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+            &lt;span class=&quot;c&quot;&gt;# if fs hasn't method, raise AttributeError.&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;origin&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;getattr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;method_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;method&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;getattr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cls&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;method_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;bound_method&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;method&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__get__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__class__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;nb&quot;&gt;setattr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;method_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bound_method&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;nb&quot;&gt;setattr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'_origin_'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;method_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;origin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Остновная идея в том чтобы не перегружать все методы, а только те которые указаны в &lt;code class=&quot;highlighter-rouge&quot;&gt;patch_methods&lt;/code&gt; и сохранить исходный метод с пометкой &lt;code class=&quot;highlighter-rouge&quot;&gt;'_origin_' + method_name&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Пример для Django’s FileSystemStorage&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;FileSystemStoragePatch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;StoragePatch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;&quot;&quot;&quot;StoragePatch for Django's FileSystemStorage.
+    &quot;&quot;&quot;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;patch_methods&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;'mkdir'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'rmdir'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;mkdir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mkdir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;storage&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;rmdir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rmdir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;storage&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;И соответственно в нашем главном классе мы можем сделать вот так:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;StorageFS&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;object&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;storage&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;get_storage_class&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;patches&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;'FileSystemStorage'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FileSystemStoragePatch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;'S3Boto3Storage'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;S3Boto3StoragePatch&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;apply_patch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;patch&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;patches&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;storage&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__class__&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__name__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;patch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;patch&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;apply&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;В общем все просто и работает :)&lt;/p&gt;</content><author><name>vahaah</name></author><category term="django" /><category term="django-sftp" /><summary type="html">Мне нужно было обеспечить поддежку, совместимость и быстрое добавление новых типов файлового хранилища для django-sftp. Опять же решение взял у django-ftpserver</summary></entry><entry><title type="html">SFTP сервер с помощью Django</title><link href="https://ru.vahaah.guru/2019/02/11/django-sftp.html" rel="alternate" type="text/html" title="SFTP сервер с помощью Django" /><published>2019-02-11T15:22:38+03:00</published><updated>2019-02-11T15:22:38+03:00</updated><id>https://ru.vahaah.guru/2019/02/11/django-sftp</id><content type="html" xml:base="https://ru.vahaah.guru/2019/02/11/django-sftp.html">&lt;p&gt;Не спрашивайте зачем, но я занялся созданием &lt;a href=&quot;https://github.com/vahaah/django-sftp&quot;&gt;рабочего SFTP сервера для Django&lt;/a&gt;. Он позволяет работать с django-storages и использовать S3.&lt;/p&gt;
 
 &lt;p&gt;На данный момент это альфа версия, вернее даже proof of concepts. Но в ближайшее время все докручу&lt;/p&gt;
 
@@ -552,139 +636,4 @@ chmod +x /usr/local/sbin/le-renew-webroot&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt
 
 &lt;span class=&quot;n&quot;&gt;SECRET_KEY&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;get_env_setting&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;‘&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MY_SECRET_KEY&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;’&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;code&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;Теперь все красиво и безопасно.&lt;/p&gt;</content><author><name>vahaah</name></author><category term="dev" /><category term="django" /><summary type="html">Я уже писал о настройках в этом посте. Но в последнее время я пересмотрел свое мнение по поводу хранения настроек, мне кажется использование файла local_settings.py избыточно и ведет к лишнему копипасту при работе с проектом. В последнее время я перел к такому формату:</summary></entry><entry><title type="html">Google Authenticator и SSH</title><link href="https://ru.vahaah.guru/2014/09/28/google-authenticator-i-ssh.html" rel="alternate" type="text/html" title="Google Authenticator и SSH" /><published>2014-09-28T12:31:00+04:00</published><updated>2014-09-28T12:31:00+04:00</updated><id>https://ru.vahaah.guru/2014/09/28/google-authenticator-i-ssh</id><content type="html" xml:base="https://ru.vahaah.guru/2014/09/28/google-authenticator-i-ssh.html">&lt;p&gt;В последнее время у меня повышенная параноя по поводу моих серверов и я решил как то дополнительно себя обезопасить, и средством безопасности я выбрал Google Authenticator, подумалось мне что одноразовые пароли затруднят все задачи по взлому “моих сокровищ” (:&lt;/p&gt;
-
-&lt;!--more--&gt;
-
-&lt;h3 id=&quot;Установка-google-authenticator&quot;&gt;Установка Google Authenticator&lt;/h3&gt;
-
-&lt;p&gt;Все действия я проводил на &lt;strong&gt;Ubuntu Server 12.04 x64&lt;/strong&gt;. Этот пакет есть в репозиториях Ubuntu поэтому установка проходит как обычно без всяких проблем:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt-get install libpam-google-authenticator&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;Создание-авторизационного-ключа&quot;&gt;Создание авторизационного ключа&lt;/h3&gt;
-
-&lt;p&gt;После того как мы все установили остаемся под основным пользователем и набираем в консоли команду&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;google-authenticator&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;После этого у вас появится ссылка на QR код и собственно сам QR&lt;/p&gt;
-
-&lt;p&gt;Для того, чтобы добавить серверв свое приложение на сматртфоне нужно считать QR код либо ввести &lt;strong&gt;secret key&lt;/strong&gt; и все будет работать, дальше нажимаем &lt;strong&gt;“y”&lt;/strong&gt; там еще будет серия вопросов, на них можно также ответь &lt;strong&gt;“y”&lt;/strong&gt; или прочитать и решить самому нужно оно или нет.&lt;/p&gt;
-
-&lt;h3 id=&quot;Активация-google-authenticator&quot;&gt;Активация Google Authenticator&lt;/h3&gt;
-
-&lt;p&gt;Теперь нужно добавить Google Authenticator как способ авторизации по SSH. Для этого нужно отредактировать файл /etc/pam.d/sshd&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;nano /etc/pam.d/sshd&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;И добавить строку:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;auth required pam_google_authenticator.so&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Далее редактируем файл &lt;strong&gt;/etc/ssh/sshd_config&lt;/strong&gt; и меняем настройку &lt;strong&gt;ChallengeResponseAuthentication&lt;/strong&gt; на &lt;strong&gt;yes&lt;/strong&gt;&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;ChallengeResponseAuthentication yes&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Теперь перезапускаем SSH&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;service ssh restart&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;И вуаля, у нас теперь при каждой авторизации по SSH требуется код Google Authenticator&lt;/p&gt;</content><author><name>vahaah</name></author><category term="ubuntu" /><summary type="html">В последнее время у меня повышенная параноя по поводу моих серверов и я решил как то дополнительно себя обезопасить, и средством безопасности я выбрал Google Authenticator, подумалось мне что одноразовые пароли затруднят все задачи по взлому “моих сокровищ” (:</summary></entry><entry><title type="html">Лучшие практики Django</title><link href="https://ru.vahaah.guru/2014/04/28/luchshiie-praktiki-django.html" rel="alternate" type="text/html" title="Лучшие практики Django" /><published>2014-04-28T12:29:00+04:00</published><updated>2014-04-28T12:29:00+04:00</updated><id>https://ru.vahaah.guru/2014/04/28/luchshiie-praktiki-django</id><content type="html" xml:base="https://ru.vahaah.guru/2014/04/28/luchshiie-praktiki-django.html">&lt;p&gt;Недавно наткнулся на статью о лучших практиках разработки на django (&lt;a href=&quot;http://lincolnloop.com/django-best-practices/projects.html&quot;&gt;ссылка&lt;/a&gt;), меня сильно порадовало что большинство из этого я интуитивно использую уже довольно давно, но вот некоторые части мне кажется нужно делать подругому нежели описанны в статье. Сейчас хочу привести вашему вниманию симбеоз статьи указанной выше и моих мыслей. Также советую совместить данную статью с моим постом о &lt;a href=&quot;//2013/09/01/django_structure.html&quot;&gt;структуре django проекта&lt;/a&gt;
-&lt;!--more--&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;Струкура-настроек-проекта&quot;&gt;Струкура настроек проекта&lt;/h3&gt;
-
-&lt;p&gt;Я обычно храню все основные настройки в файле &lt;strong&gt;settings.py&lt;/strong&gt; и в него импортирую файл &lt;strong&gt;local_settings.py&lt;/strong&gt;, также файл settings.py хранится в git, а local_settings.py делается для каждого окружения свой, но в git хранится local_settings.py.example который содержит структуру файла и то что можно в нем менять или добавить.&lt;/p&gt;
-
-&lt;p&gt;Импорт в settings.py:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;k&quot;&gt;try&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;settings_local&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;except&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;ImportError&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;pass&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Примерное содержимое файла local_settings.py.example:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;os&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;DEBUG&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;TEMPLATE_DEBUG&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DEBUG&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;ADMINS&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'You'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'your@email'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;MANAGERS&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ADMINS&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;DATABASES&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;'default'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;s&quot;&gt;'ENGINE'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'django.db.backends.sqlite3'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;s&quot;&gt;'NAME'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;realpath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__file__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'dev.db'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;CACHES&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;'default'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;s&quot;&gt;'BACKEND'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'django.core.cache.backends.dummy.DummyCache'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Структура выглядит примерно так:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;project &lt;span class=&quot;c&quot;&gt;#директория проекта&lt;/span&gt;
-- prjct &lt;span class=&quot;c&quot;&gt;#директория основного приложения&lt;/span&gt;
-- - settings.py
-- - local_settings.py.example
-- - local_settings.py
-- - …
-- manage.py&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;При переносе приложения на другой сервер, либо при открытии проекта другим разарботкичом требуется лишь переименовать local_settings.py.example в local_settings.py и внести нужные настройки.&lt;/p&gt;
-
-&lt;h3 id=&quot;Использование-путей-к-файлам&quot;&gt;Использование путей к файлам.&lt;/h3&gt;
-
-&lt;p&gt;В настройках django нужно указывать пути до директорий в которых хранятся статические файлы, наблоны, файлы локализации и тд. Для этого не нужно писать полный путь, а лучше поручить все это python. Я для этого использую данный прием:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;os&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;PROJECT_DIR&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dirname&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;realpath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__file__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PROJECT_DIR&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'..'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;В теперь путь функция p будет указывать на корень проекта, и использовать ее нужно вот так:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;n&quot;&gt;STATIC_ROOT&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'static’)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Для статических файлов будет определена директория static в корне проекта.&lt;/p&gt;
-
-&lt;h3 id=&quot;Статические-файлы-в-шаблоне&quot;&gt;Статические файлы в шаблоне.&lt;/h3&gt;
-
-&lt;p&gt;Для определения путей к статическим файлам я использую приложение staticfiles (django.contrib.staticfiles), его нужно добавить к списку INSTALLED_APPS:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;n&quot;&gt;INSTALLED_APPS&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-&lt;span class=&quot;err&quot;&gt;…&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;
- &lt;span class=&quot;err&quot;&gt;‘&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;django&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;contrib&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;staticfiles&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;’&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-&lt;span class=&quot;err&quot;&gt;…&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;И теперь во всех шаблонах мы сможем использовать удобную конструкцию для загрузки статических файлов:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;load&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;img&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;src&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;{&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;% &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;static «images/test.jpg&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot; /&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;Работа-с-шаблонами&quot;&gt;Работа с шаблонами.&lt;/h3&gt;
-
-&lt;p&gt;Самый лучший и однозначный способ именования шаблонов это использование такой конструкции:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;приложение&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;модель&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;функция&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;HTML&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Функции:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;list&lt;/strong&gt; - для вывода списков&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;detail&lt;/strong&gt; - для детальное отображения&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;form&lt;/strong&gt; - для вывода формы&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;А все части шаблона нужно складывать в директорию includes&lt;/p&gt;
-
-&lt;p&gt;Я указал лишь основы, в будущем скорей всего продолжу тему хороших практик при создании django  приложения&lt;/p&gt;</content><author><name>vahaah</name></author><category term="django" /><summary type="html">Недавно наткнулся на статью о лучших практиках разработки на django (ссылка), меня сильно порадовало что большинство из этого я интуитивно использую уже довольно давно, но вот некоторые части мне кажется нужно делать подругому нежели описанны в статье. Сейчас хочу привести вашему вниманию симбеоз статьи указанной выше и моих мыслей. Также советую совместить данную статью с моим постом о структуре django проекта</summary></entry></feed>
+&lt;p&gt;Теперь все красиво и безопасно.&lt;/p&gt;</content><author><name>vahaah</name></author><category term="dev" /><category term="django" /><summary type="html">Я уже писал о настройках в этом посте. Но в последнее время я пересмотрел свое мнение по поводу хранения настроек, мне кажется использование файла local_settings.py избыточно и ведет к лишнему копипасту при работе с проектом. В последнее время я перел к такому формату:</summary></entry></feed>
