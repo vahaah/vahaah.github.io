@@ -9,6 +9,7 @@ conf
 debian
 detail
 django
+django-ftpserver
 django-storages
 docker
 docker-compose
