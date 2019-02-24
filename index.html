@@ -45,35 +45,25 @@ layout: default
 
     {% if paginator.total_pages > 1 %}
     <div class="pagination">
-    {% if paginator.previous_page %}
-      <a href="{{ paginator.previous_page_path | relative_url }}">
-        &laquo; Назад
-      </a>
-    {% else %}
-      <span>&laquo; Назад</span>
-    {% endif %}
-
-    {% for page in (1..paginator.total_pages) %}
-      {% if page == paginator.page %}
-        <em>{{ page }}</em>
-      {% elsif page == 1 %}
-        <a href="{{ paginator.previous_page_path | relative_url }}">
-          {{ page }}
-        </a>
-      {% else %}
-        <a href="{{ site.paginate_path | relative_url | replace: ':num', page }}">
-          {{ page }}
-        </a>
-      {% endif %}
-    {% endfor %}
-
-    {% if paginator.next_page %}
-      <a href="{{ paginator.next_page_path | relative_url }}">
-        Вперед &raquo;
-      </a>
-    {% else %}
-      <span>Вперед &raquo;</span>
-    {% endif %}
+      <div class="left">
+        {% if paginator.previous_page %}
+          {% if paginator.previous_page == 1 %}
+            <a href="/"><i class="icon icon-fast-backward"></i></a>
+          {% else %}
+            <a href="/p/{{ paginator.previous_page }}"><i class="icon icon-fast-backward"></i></a>
+          {% endif %}
+        {% else %}
+          <span class="mute"><i class="icon icon-fast-backward"></i></span>
+        {% endif %}
+      </div>
+      страница {{ paginator.page }} из {{ paginator.total_pages }}
+      <div class="right">
+        {% if paginator.next_page %}
+          <a href="/p/{{ paginator.next_page }}"><i class="icon icon-fast-forward"></i></a>
+        {% else %}
+          <span class="mute"><i class="icon icon-fast-forward"></i></span>
+        {% endif %}
+      </div>
     </div>
     {% endif %}
 </div>
