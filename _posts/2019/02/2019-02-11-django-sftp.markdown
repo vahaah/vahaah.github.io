@@ -5,11 +5,14 @@ date: '2019-02-11 15:22:38'
 tags:
 - django
 - sftp
+- django-sftp
 ---
 
 Не спрашивайте зачем, но я занялся созданием [рабочего SFTP сервера для Django](https://github.com/vahaah/django-sftp). Он позволяет работать с django-storages и использовать S3.
 
 На данный момент это альфа версия, вернее даже proof of concepts. Но в ближайшее время все докручу
+
+Вдохновлено: [django-ftpserver](https://github.com/tokibito/django-ftpserver)
 
 <!--more-->
 
