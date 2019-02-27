@@ -17,3 +17,6 @@ permalink: /about/
 **Как со мной связаться?**
 
 Самый простой способ это написать письмо на этот адрес: *alex.vakhitov@gmail.com*
+
+
+{% google_map src="_posts/2019" %}

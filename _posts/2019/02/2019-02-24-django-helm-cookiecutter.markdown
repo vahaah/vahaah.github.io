@@ -2,6 +2,10 @@
 layout: post
 title: Django Helm Cookiecutter
 date: '2019-02-24 18:22:38'
+place: Санкт-Петербург, Россия
+location:
+  latitude: 60.007467
+  longitude: 30.311697
 tags:
 - django
 - cookiecutter
@@ -23,7 +27,7 @@ pip install "cookiecutter>=1.4.0"
 Запускае для нашего шаблона:
 
 {% highlight bash %}
-cookiecutter https://github.com/pydanny/django-helm-cookiecutter
+cookiecutter https://github.com/vahaah/django-helm-cookiecutter
 {% endhighlight %}
 
 Выбираем конфигурацию:

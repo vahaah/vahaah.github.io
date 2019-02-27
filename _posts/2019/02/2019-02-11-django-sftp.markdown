@@ -2,6 +2,10 @@
 layout: post
 title: SFTP сервер с помощью Django
 date: '2019-02-11 15:22:38'
+place: Санкт-Петербург, Россия
+location:
+  latitude: 60.007467
+  longitude: 30.311697
 tags:
 - django
 - sftp

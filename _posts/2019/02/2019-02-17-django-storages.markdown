@@ -2,6 +2,10 @@
 layout: post
 title: Использование django storages в своем приложении
 date: '2019-02-17 15:00:38'
+place: Санкт-Петербург, Россия
+location:
+  latitude: 60.007467
+  longitude: 30.311697
 tags:
 - django
 - django-sftp

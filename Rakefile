@@ -141,7 +141,7 @@ task ping: [:build] do
     .reject{ |a| a.start_with? 'https://ru.vahaah.guru/' }
     .reject{ |a| a.include? 'linkedin.com' }
     .reject{ |a| !(a =~ /^https?:\/\/.*/) }
-  tmp = Tempfile.new(['yegor256-', '.txt'])
+  tmp = Tempfile.new(['vahaah-', '.txt'])
   tmp << links.join("\n")
   tmp.flush
   tmp.close

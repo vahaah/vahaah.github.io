@@ -79,9 +79,9 @@ module Jekyll
           payload['image_width'], payload['image_height'] = Jekyll.image_size(page['image'])
           payload['image_src'] = page['image']
         else
-          payload['image_width'] = 1400
-          payload['image_height'] = 1400
-          payload['image_src'] = 'https://www.yegor256.com/images/face-1200x1200.jpg'
+          payload['image_width'] = 1024
+          payload['image_height'] = 769
+          payload['image_src'] = 'https://ru.vahaah.guru.com/images/face.jpg'
         end
         page.render(
           { 'post' => Layout.new(site, site.source, '_layouts/amp.html') },
