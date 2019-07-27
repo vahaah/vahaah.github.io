@@ -8,6 +8,8 @@ compose
 concepts
 conf
 cookiecutter
+curry
+currying
 debian
 detail
 django
@@ -24,8 +26,10 @@ DRF
 example
 form
 FROM
+funcy
 generic-driver
 git
+glom
 google
 happy
 helm
@@ -67,4 +71,5 @@ type
 ubuntu
 volumes
 VSCALE
+wikipedia
 yml
