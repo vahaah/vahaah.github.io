@@ -61,7 +61,6 @@ plugins:
   - jekyll-bits
   - jekyll-sitemap
   - jekyll-redirect-from
-  - jekyll-maps
 
 exclude:
   - README.md
