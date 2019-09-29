@@ -43,7 +43,7 @@ data_glom("a.b")
 
 #### Синопсис #2:
 
-Когда мы работаем с [glom](https://github.com/mahmoud/glom/) нам хочется не возвразать ключ если он его нет в основном объекте.
+Когда мы работаем с [glom](https://github.com/mahmoud/glom/) нам хочется не возвращать ключ, если его нет в основном объекте.
 
 {% highlight python %}
 from funcy import curry
