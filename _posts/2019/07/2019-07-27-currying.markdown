@@ -34,11 +34,38 @@ from glom import glom
 # наши данные
 data = {"a": "a", "b": {"c": "c"}
 # создаем каррирование
-curry_glom = curry(glom)
+make_getter = curry(glom)
 # задаем первый аргумент
 data_glom = make_getter(data)
 # и теперь мы можем использовать простой вызова функции
 data_glom("a.b")
+{% endhighlight %}
+
+#### Синопсис #2:
+
+Когда мы работаем с [glom](https://github.com/mahmoud/glom/) нам хочется не возвразать ключ если он его нет в основном объекте.
+
+{% highlight python %}
+from funcy import curry
+from glom import SKIP, glom
+
+
+def return_value_or_skip(field_name, data_object):
+    if field_name in data_object and data_object[field_name]:
+        return data_object[field_name]
+    return SKIP
+
+# наши данные
+data = {"a": "a", "b": {"c": "c"}}
+# создаем каррирование
+make_getter = curry(return_value_or_skip)
+# задаем спецификацию
+spec = {
+  "key_a": "a",
+  # если ключ не существует то мы его пропустим
+  "key_z": make_getter("z"),
+}
+glom(data, spec)
 {% endhighlight %}
 
 
