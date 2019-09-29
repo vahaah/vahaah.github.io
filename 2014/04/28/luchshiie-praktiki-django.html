@@ -2,9 +2,9 @@
 <html lang="ru"><head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.5.0 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
 <title>Лучшие практики Django | Yet another blog</title>
-<meta name="generator" content="Jekyll v3.8.5" />
+<meta name="generator" content="Jekyll v3.6.3" />
 <meta property="og:title" content="Лучшие практики Django" />
 <meta name="author" content="vahaah" />
 <meta property="og:locale" content="ru" />
@@ -14,14 +14,15 @@
 <meta property="og:url" content="https://ru.vahaah.guru/2014/04/28/luchshiie-praktiki-django.html" />
 <meta property="og:site_name" content="Yet another blog" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2014-04-28T12:29:00+01:00" />
+<meta property="article:published_time" content="2014-04-28T12:29:00+04:00" />
 <meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Лучшие практики Django" />
 <meta name="twitter:site" content="@vahaah" />
 <meta name="twitter:creator" content="@vahaah" />
 <meta name="google-site-verification" content="11p66_UM03GRxdmvTd90BBQn7G2eVFDmtyaFtQ5O540" />
 <meta name="yandex-verification" content="b515e98375753ead" />
 <script type="application/ld+json">
-{"description":"Недавно наткнулся на статью о лучших практиках разработки на django (ссылка), меня сильно порадовало что большинство из этого я интуитивно использую уже довольно давно, но вот некоторые части мне кажется нужно делать подругому нежели описанны в статье. Сейчас хочу привести вашему вниманию симбеоз статьи указанной выше и моих мыслей. Также советую совместить данную статью с моим постом о структуре django проекта","author":{"@type":"Person","name":"vahaah"},"@type":"BlogPosting","url":"https://ru.vahaah.guru/2014/04/28/luchshiie-praktiki-django.html","headline":"Лучшие практики Django","dateModified":"2014-04-28T12:29:00+01:00","datePublished":"2014-04-28T12:29:00+01:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://ru.vahaah.guru/2014/04/28/luchshiie-praktiki-django.html"},"@context":"http://schema.org"}</script>
+{"author":{"@type":"Person","name":"vahaah"},"url":"https://ru.vahaah.guru/2014/04/28/luchshiie-praktiki-django.html","headline":"Лучшие практики Django","dateModified":"2014-04-28T12:29:00+04:00","datePublished":"2014-04-28T12:29:00+04:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://ru.vahaah.guru/2014/04/28/luchshiie-praktiki-django.html"},"description":"Недавно наткнулся на статью о лучших практиках разработки на django (ссылка), меня сильно порадовало что большинство из этого я интуитивно использую уже довольно давно, но вот некоторые части мне кажется нужно делать подругому нежели описанны в статье. Сейчас хочу привести вашему вниманию симбеоз статьи указанной выше и моих мыслей. Также советую совместить данную статью с моим постом о структуре django проекта","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/main.css">
   <link rel="stylesheet" href="/assets/icons.css"><link type="application/atom+xml" rel="alternate" href="https://ru.vahaah.guru/rss.xml" title="Yet another blog" /><script>
@@ -84,7 +85,7 @@ if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNo
     <div class="post-meta">
       <ul class="subline">
         <li>
-          <time class="dt-published" datetime="2014-04-28T12:29:00+01:00" itemprop="datePublished">28.04.2014
+          <time class="dt-published" datetime="2014-04-28T12:29:00+04:00" itemprop="datePublished">28.04.2014
           </time>
         </li><li>311 слов</li>
       <li>
@@ -105,7 +106,7 @@ if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNo
     <p>Недавно наткнулся на статью о лучших практиках разработки на django (<a href="http://lincolnloop.com/django-best-practices/projects.html">ссылка</a>), меня сильно порадовало что большинство из этого я интуитивно использую уже довольно давно, но вот некоторые части мне кажется нужно делать подругому нежели описанны в статье. Сейчас хочу привести вашему вниманию симбеоз статьи указанной выше и моих мыслей. Также советую совместить данную статью с моим постом о <a href="//2013/09/01/django_structure.html">структуре django проекта</a>
 <!--more--></p>
 
-<h3 id="Струкура-настроек-проекта">Струкура настроек проекта</h3>
+<h3 id="струкура-настроек-проекта">Струкура настроек проекта</h3>
 
 <p>Я обычно храню все основные настройки в файле <strong>settings.py</strong> и в него импортирую файл <strong>local_settings.py</strong>, также файл settings.py хранится в git, а local_settings.py делается для каждого окружения свой, но в git хранится local_settings.py.example который содержит структуру файла и то что можно в нем менять или добавить.</p>
 
@@ -152,7 +153,7 @@ if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNo
 
 <p>При переносе приложения на другой сервер, либо при открытии проекта другим разарботкичом требуется лишь переименовать local_settings.py.example в local_settings.py и внести нужные настройки.</p>
 
-<h3 id="Использование-путей-к-файлам">Использование путей к файлам.</h3>
+<h3 id="использование-путей-к-файлам">Использование путей к файлам.</h3>
 
 <p>В настройках django нужно указывать пути до директорий в которых хранятся статические файлы, наблоны, файлы локализации и тд. Для этого не нужно писать полный путь, а лучше поручить все это python. Я для этого использую данный прием:</p>
 
@@ -169,7 +170,7 @@ if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNo
 
 <p>Для статических файлов будет определена директория static в корне проекта.</p>
 
-<h3 id="Статические-файлы-в-шаблоне">Статические файлы в шаблоне.</h3>
+<h3 id="статические-файлы-в-шаблоне">Статические файлы в шаблоне.</h3>
 
 <p>Для определения путей к статическим файлам я использую приложение staticfiles (django.contrib.staticfiles), его нужно добавить к списку INSTALLED_APPS:</p>
 
@@ -184,7 +185,7 @@ if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNo
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="p">{</span><span class="o">%</span> <span class="n">load</span> <span class="n">static</span> <span class="o">%</span><span class="p">}</span>
 <span class="o">&lt;</span><span class="n">img</span> <span class="n">src</span><span class="o">=</span><span class="s">"{</span><span class="si">% </span><span class="s">static «images/test.jpg"</span> <span class="o">%</span><span class="p">}</span><span class="s">" /&gt;</span></code></pre></figure>
 
-<h3 id="Работа-с-шаблонами">Работа с шаблонами.</h3>
+<h3 id="работа-с-шаблонами">Работа с шаблонами.</h3>
 
 <p>Самый лучший и однозначный способ именования шаблонов это использование такой конструкции:</p>
 

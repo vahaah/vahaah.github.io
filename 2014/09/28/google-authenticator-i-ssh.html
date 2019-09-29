@@ -2,9 +2,9 @@
 <html lang="ru"><head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.5.0 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
 <title>Google Authenticator и SSH | Yet another blog</title>
-<meta name="generator" content="Jekyll v3.8.5" />
+<meta name="generator" content="Jekyll v3.6.3" />
 <meta property="og:title" content="Google Authenticator и SSH" />
 <meta name="author" content="vahaah" />
 <meta property="og:locale" content="ru" />
@@ -14,14 +14,15 @@
 <meta property="og:url" content="https://ru.vahaah.guru/2014/09/28/google-authenticator-i-ssh.html" />
 <meta property="og:site_name" content="Yet another blog" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2014-09-28T12:31:00+01:00" />
+<meta property="article:published_time" content="2014-09-28T12:31:00+04:00" />
 <meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Google Authenticator и SSH" />
 <meta name="twitter:site" content="@vahaah" />
 <meta name="twitter:creator" content="@vahaah" />
 <meta name="google-site-verification" content="11p66_UM03GRxdmvTd90BBQn7G2eVFDmtyaFtQ5O540" />
 <meta name="yandex-verification" content="b515e98375753ead" />
 <script type="application/ld+json">
-{"description":"В последнее время у меня повышенная параноя по поводу моих серверов и я решил как то дополнительно себя обезопасить, и средством безопасности я выбрал Google Authenticator, подумалось мне что одноразовые пароли затруднят все задачи по взлому “моих сокровищ” (:","author":{"@type":"Person","name":"vahaah"},"@type":"BlogPosting","url":"https://ru.vahaah.guru/2014/09/28/google-authenticator-i-ssh.html","headline":"Google Authenticator и SSH","dateModified":"2014-09-28T12:31:00+01:00","datePublished":"2014-09-28T12:31:00+01:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://ru.vahaah.guru/2014/09/28/google-authenticator-i-ssh.html"},"@context":"http://schema.org"}</script>
+{"author":{"@type":"Person","name":"vahaah"},"url":"https://ru.vahaah.guru/2014/09/28/google-authenticator-i-ssh.html","headline":"Google Authenticator и SSH","dateModified":"2014-09-28T12:31:00+04:00","datePublished":"2014-09-28T12:31:00+04:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://ru.vahaah.guru/2014/09/28/google-authenticator-i-ssh.html"},"description":"В последнее время у меня повышенная параноя по поводу моих серверов и я решил как то дополнительно себя обезопасить, и средством безопасности я выбрал Google Authenticator, подумалось мне что одноразовые пароли затруднят все задачи по взлому “моих сокровищ” (:","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/main.css">
   <link rel="stylesheet" href="/assets/icons.css"><link type="application/atom+xml" rel="alternate" href="https://ru.vahaah.guru/rss.xml" title="Yet another blog" /><script>
@@ -84,7 +85,7 @@ if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNo
     <div class="post-meta">
       <ul class="subline">
         <li>
-          <time class="dt-published" datetime="2014-09-28T12:31:00+01:00" itemprop="datePublished">28.09.2014
+          <time class="dt-published" datetime="2014-09-28T12:31:00+04:00" itemprop="datePublished">28.09.2014
           </time>
         </li><li>194 слов</li>
       <li>
@@ -104,13 +105,13 @@ if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNo
 
 <!--more-->
 
-<h3 id="Установка-google-authenticator">Установка Google Authenticator</h3>
+<h3 id="установка-google-authenticator">Установка Google Authenticator</h3>
 
 <p>Все действия я проводил на <strong>Ubuntu Server 12.04 x64</strong>. Этот пакет есть в репозиториях Ubuntu поэтому установка проходит как обычно без всяких проблем:</p>
 
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">sudo </span>apt-get install libpam-google-authenticator</code></pre></figure>
 
-<h3 id="Создание-авторизационного-ключа">Создание авторизационного ключа</h3>
+<h3 id="создание-авторизационного-ключа">Создание авторизационного ключа</h3>
 
 <p>После того как мы все установили остаемся под основным пользователем и набираем в консоли команду</p>
 
@@ -120,7 +121,7 @@ if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNo
 
 <p>Для того, чтобы добавить серверв свое приложение на сматртфоне нужно считать QR код либо ввести <strong>secret key</strong> и все будет работать, дальше нажимаем <strong>“y”</strong> там еще будет серия вопросов, на них можно также ответь <strong>“y”</strong> или прочитать и решить самому нужно оно или нет.</p>
 
-<h3 id="Активация-google-authenticator">Активация Google Authenticator</h3>
+<h3 id="активация-google-authenticator">Активация Google Authenticator</h3>
 
 <p>Теперь нужно добавить Google Authenticator как способ авторизации по SSH. Для этого нужно отредактировать файл /etc/pam.d/sshd</p>
 
