@@ -35,7 +35,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'wdm', '~> 0.1.0' if Gem.win_platform?
 
 gem 'fastimage', '~>2.1'
-gem 'fontcustom', '~>1.3'
+gem 'fontcustom', '~>2.0'
 gem 'html-proofer', '~>3.6'
 gem 'liquid', '~>4.0'
 gem 'mail', '~>2.6'
